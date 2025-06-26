@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>클라우드 용사 - Cloud Hero Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="terminal-container">
+        <!-- 게임 시작 화면 -->
+        <div id="welcome-screen" class="screen active">
+            <div class="ascii-art" id="welcome-ascii"></div>
+            <div class="input-section">
+                <div class="prompt">
+                    <span class="prompt-symbol">$</span>
+                    <span class="prompt-text">용사의 이름을 입력하세요:</span>
+                </div>
+                <input type="text" id="player-name" class="terminal-input" placeholder="이름을 입력하고 Enter를 누르세요" maxlength="20">
+                <button id="start-game" class="terminal-button">게임 시작</button>
+            </div>
+        </div>
+
+        <!-- 게임 진행 화면 -->
+        <div id="game-screen" class="screen">
+            <!-- 상태 바 -->
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">플레이어:</span>
+                    <span id="current-player" class="status-value">용사</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">점수:</span>
+                    <span id="current-score" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">진행:</span>
+                    <span id="progress-text" class="status-value">0/10</span>
+                </div>
+            </div>
+
+            <!-- 진행률 바 -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- 문제 영역 -->
+            <div class="question-container">
+                <div class="ascii-scene" id="question-ascii"></div>
+                <div class="scenario-text" id="scenario-text"></div>
+                <div class="choices-container" id="choices-container"></div>
+            </div>
+
+            <!-- 로딩 상태 -->
+            <div id="loading" class="loading hidden">
+                <div class="loading-text">처리 중...</div>
+                <div class="loading-spinner">⚡</div>
+            </div>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="screen">
+            <div class="result-container">
+                <div class="result-header" id="result-header"></div>
+                <div class="result-content">
+                    <div class="result-item">
+                        <span class="result-label">선택한 답:</span>
+                        <span id="selected-answer" class="result-value"></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">정답:</span>
+                        <span id="correct-answer" class="result-value"></span>
+                    </div>
+                    <div class="explanation-container">
+                        <div class="explanation-title">💡 설명:</div>
+                        <div id="explanation-text" class="explanation-text"></div>
+                        <div class="reference-link">
+                            <a id="reference-url" href="#" target="_blank" class="reference-link-text">
+                                📚 AWS 공식 문서 보기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button id="next-question" class="terminal-button">다음 문제</button>
+            </div>
+        </div>
+
+        <!-- 게임 완료 화면 -->
+        <div id="ending-screen" class="screen">
+            <div class="ending-container">
+                <div class="ascii-art" id="ending-ascii"></div>
+                <div class="final-score-container">
+                    <div class="final-score-title">최종 결과</div>
+                    <div class="final-score-item">
+                        <span class="score-label">총 점수:</span>
+                        <span id="final-score" class="score-value">0</span>
+                    </div>
+                    <div class="final-score-item">
+                        <span class="score-label">정답률:</span>
+                        <span id="accuracy-rate" class="score-value">0%</span>
+                    </div>
+                    <div class="final-score-item">
+                        <span class="score-label">정답 수:</span>
+                        <span id="correct-count" class="score-value">0/10</span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="restart-game" class="terminal-button">다시 도전</button>
+                    <button id="view-leaderboard" class="terminal-button secondary">리더보드</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 리더보드 화면 -->
+        <div id="leaderboard-screen" class="screen">
+            <div class="leaderboard-container">
+                <div class="leaderboard-title">🏆 리더보드</div>
+                <div id="leaderboard-content" class="leaderboard-content"></div>
+                <button id="back-to-game" class="terminal-button">게임으로 돌아가기</button>
+            </div>
+        </div>
+
+        <!-- 에러 메시지 -->
+        <div id="error-message" class="error-message hidden">
+            <div class="error-content">
+                <div class="error-title">⚠️ 오류 발생</div>
+                <div id="error-text" class="error-text"></div>
+                <button id="error-close" class="terminal-button">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 배경 효과 -->
+    <div class="background-effects">
+        <div class="matrix-rain"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
