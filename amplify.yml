@@ -6,9 +6,8 @@ frontend:
         - echo "🎮 클라우드 용사 게임 빌드 시작!"
     build:
       commands:
-        - echo "📦 프론트엔드 파일 준비 중..."
-        - cp frontend/final_fixed.html frontend/index.html
-        - cp frontend/script_final_fixed.js frontend/script.js
+        - echo "📦 프론트엔드 파일 준비 완료!"
+        - echo "메인 파일: index.html, script.js, style.css"
     postBuild:
       commands:
         - echo "✅ 빌드 완료!"

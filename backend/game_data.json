@@ -43,7 +43,7 @@
       ],
       "correct_answer": 0,
       "explanation": "Amazon EC2(Elastic Compute Cloud)는 클라우드에서 확장 가능한 컴퓨팅 용량을 제공하는 웹 서비스입니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/ec2/latest/userguide/concepts.html"
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html"
     },
     {
       "id": 2,
@@ -65,7 +65,7 @@
       ],
       "correct_answer": 1,
       "explanation": "메모리 부족 오류가 발생하면 인스턴스를 중지하고 더 큰 인스턴스 유형으로 변경하여 메모리를 늘려야 합니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/TroubleshootingInstances.html"
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html"
     },
     {
       "id": 3,
@@ -86,7 +86,7 @@
       ],
       "correct_answer": 1,
       "explanation": "S3 버전 관리가 활성화되어 있으면 삭제된 객체의 이전 버전을 복원할 수 있습니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Versioning.html"
+      "reference_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
     },
     {
       "id": 4,
@@ -107,7 +107,7 @@
       ],
       "correct_answer": 2,
       "explanation": "AWS Lambda 함수의 최대 실행 시간(타임아웃)은 15분입니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/gettingstarted-limits.html"
+      "reference_url": "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
     },
     {
       "id": 5,
@@ -128,7 +128,7 @@
       ],
       "correct_answer": 2,
       "explanation": "RDS 다중 AZ 배포는 고가용성을 제공하고 기본 DB 인스턴스에 장애가 발생할 때 자동으로 대기 인스턴스로 장애 조치를 수행합니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+      "reference_url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
     },
     {
       "id": 6,
@@ -149,7 +149,7 @@
       ],
       "correct_answer": 1,
       "explanation": "CloudFront에서 캐시된 콘텐츠를 즉시 업데이트하려면 캐시 무효화를 사용하여 특정 파일이나 경로의 캐시를 강제로 제거할 수 있습니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html"
+      "reference_url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html"
     },
     {
       "id": 7,
@@ -170,7 +170,7 @@
       ],
       "correct_answer": 1,
       "explanation": "IAM 최소 권한 원칙에 따라 사용자는 작업을 수행하는 데 필요한 최소한의 권한만 가져야 합니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/best-practices.html"
+      "reference_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
     },
     {
       "id": 8,
@@ -191,7 +191,7 @@
       ],
       "correct_answer": 1,
       "explanation": "스케일 아웃은 수평적 확장으로, 더 많은 인스턴스를 추가하여 부하를 분산시키는 것입니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
+      "reference_url": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
     },
     {
       "id": 9,
@@ -212,7 +212,7 @@
       ],
       "correct_answer": 0,
       "explanation": "웹 서버에 HTTP 접속을 허용하려면 보안 그룹의 인바운드 규칙에 포트 80을 추가해야 합니다. 0.0.0.0/0은 모든 IP에서의 접근을 허용합니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/security-group-rules.html"
+      "reference_url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
     },
     {
       "id": 10,
@@ -234,7 +234,7 @@
       ],
       "correct_answer": 1,
       "explanation": "Bedrock에서 AccessDeniedException 오류가 발생하면, AWS 콘솔의 Bedrock 서비스에서 사용하려는 Foundation Model에 대한 액세스를 먼저 요청해야 합니다.",
-      "reference_url": "https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/model-access.html"
+      "reference_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html"
     }
   ],
   "ending_message": {
@@ -242,7 +242,7 @@
       "🎉 축하합니다! 🎉",
       "",
       "차원문이 열렸습니다!",
-      "당신은 클라우드 마을을 구하고",
+      "{player_name}님은 클라우드 마을을 구하고",
       "다음 세계로의 문을 열었습니다!",
       "",
       "   ⭐ CLOUD HERO ⭐",
@@ -253,7 +253,8 @@
       "  │  🌀 PORTAL 🌀   │",
       "  └─────────────────┘",
       "",
-      "마을 사람들이 당신을 영웅으로 기억할 것입니다!",
+      "마을 사람들이 {player_name}님을",
+      "영웅으로 기억할 것입니다!",
       "새로운 모험이 당신을 기다리고 있습니다!"
     ]
   }
