@@ -1,0 +1,678 @@
+/* 클라우드 용사 게임 스타일 - 터미널 테마 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    background: #0a0a0a;
+    color: #00ff41;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* 배경 효과 */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.matrix-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 65, 0.03) 100%);
+}
+
+/* 메인 컨테이너 */
+.terminal-container {
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* 화면 전환 */
+.screen {
+    display: none;
+    width: 100%;
+    max-width: 1000px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* 언어 선택 화면 */
+.language-select-container {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(0, 20, 0, 0.9);
+    border: 2px solid #00ff41;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+}
+
+.language-title-container {
+    margin: 30px 0 40px 0;
+}
+
+.language-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #00ff41;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.language-subtitle {
+    font-size: 1.5rem;
+    color: #66ff66;
+    font-weight: 400;
+    opacity: 0.8;
+    letter-spacing: 1px;
+}
+
+.language-selection {
+    margin-top: 40px;
+}
+
+.select-language-text {
+    font-size: 1.2rem;
+    color: #cccccc;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.language-buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.language-button {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 30px;
+    background: rgba(0, 40, 0, 0.8);
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    color: #00ff41;
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    letter-spacing: 1px;
+}
+
+.language-button:hover {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: #66ff66;
+    color: #66ff66;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+    transform: translateY(-2px);
+}
+
+.language-button:active {
+    transform: translateY(0);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.6);
+}
+
+.language-button .flag {
+    font-size: 1.5rem;
+}
+
+.language-button .lang-text {
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .language-title {
+        font-size: 2rem;
+    }
+    
+    .language-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .language-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .language-button {
+        min-width: 200px;
+    }
+}
+    display: none;
+    width: 100%;
+    max-width: 900px;
+    height: 100%;
+    max-height: 700px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ff41;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 65, 0.3),
+        inset 0 0 20px rgba(0, 255, 65, 0.1);
+    overflow-y: auto;
+    animation: screenGlow 2s ease-in-out infinite alternate;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes screenGlow {
+    from { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), inset 0 0 20px rgba(0, 255, 65, 0.1); }
+    to { box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 30px rgba(0, 255, 65, 0.2); }
+}
+
+/* 아스키 아트 */
+.ascii-art {
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #00ff41;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+    white-space: pre-line;
+}
+
+.ascii-scene {
+    font-size: 12px;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffaa00;
+    text-shadow: 0 0 8px rgba(255, 170, 0, 0.6);
+    white-space: pre-line;
+    border: 1px solid #ffaa00;
+    padding: 15px;
+    border-radius: 5px;
+    background: rgba(255, 170, 0, 0.05);
+}
+
+/* 입력 섹션 */
+.input-section {
+    text-align: center;
+}
+
+.prompt {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.prompt-symbol {
+    color: #ff6b6b;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.prompt-text {
+    color: #00ff41;
+}
+
+.terminal-input {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff41;
+    color: #00ff41;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.terminal-input:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+}
+
+.terminal-input::placeholder {
+    color: #666;
+}
+
+/* 버튼 */
+.terminal-button {
+    background: rgba(0, 255, 65, 0.1);
+    border: 2px solid #00ff41;
+    color: #00ff41;
+    padding: 12px 30px;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.terminal-button:hover {
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+    transform: translateY(-2px);
+}
+
+.terminal-button:active {
+    transform: translateY(0);
+}
+
+.terminal-button.secondary {
+    border-color: #ffaa00;
+    color: #ffaa00;
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.terminal-button.secondary:hover {
+    background: rgba(255, 170, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+}
+
+/* 상태 바 */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid #00ff41;
+    border-radius: 5px;
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status-label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.status-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #00ff41;
+}
+
+/* 진행률 바 */
+.progress-container {
+    margin-bottom: 30px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00ff41;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff41, #00ff88);
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+}
+
+/* 문제 컨테이너 */
+.question-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.scenario-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(0, 255, 65, 0.05);
+    border-left: 4px solid #00ff41;
+    border-radius: 5px;
+}
+
+/* 선택지 */
+.choices-container {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.choice-button {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #666;
+    color: #ccc;
+    padding: 15px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+}
+
+.choice-button:hover {
+    border-color: #00ff41;
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.choice-button.selected {
+    border-color: #00ff41;
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.choice-button::before {
+    content: attr(data-index);
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: #666;
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.choice-button.selected::before {
+    background: #00ff41;
+}
+
+/* 로딩 */
+.loading {
+    text-align: center;
+    padding: 30px;
+}
+
+.loading-text {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.loading-spinner {
+    font-size: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 결과 화면 */
+.result-container {
+    text-align: center;
+}
+
+.result-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.result-header.correct {
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.1);
+    border: 2px solid #00ff41;
+}
+
+.result-header.incorrect {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    border: 2px solid #ff6b6b;
+}
+
+.result-content {
+    margin-bottom: 30px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 255, 65, 0.05);
+    border-radius: 5px;
+}
+
+.result-label {
+    font-weight: bold;
+}
+
+.result-value {
+    color: #ffaa00;
+}
+
+.explanation-container {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #666;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.explanation-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffaa00;
+}
+
+.explanation-text {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.reference-link-text {
+    color: #00aaff;
+    text-decoration: none;
+    border-bottom: 1px dotted #00aaff;
+}
+
+.reference-link-text:hover {
+    color: #00ccff;
+    text-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+}
+
+/* 게임 완료 화면 */
+.ending-container {
+    text-align: center;
+}
+
+.final-score-container {
+    margin: 30px 0;
+    padding: 25px;
+    background: rgba(0, 255, 65, 0.1);
+    border: 2px solid #00ff41;
+    border-radius: 10px;
+}
+
+.final-score-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffaa00;
+}
+
+.final-score-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.score-label {
+    font-weight: bold;
+}
+
+.score-value {
+    color: #00ff41;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* 리더보드 */
+.leaderboard-container {
+    text-align: center;
+}
+
+.leaderboard-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #ffaa00;
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.8);
+}
+
+.leaderboard-content {
+    margin-bottom: 30px;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid #00ff41;
+    border-radius: 5px;
+}
+
+.leaderboard-rank {
+    font-weight: bold;
+    color: #ffaa00;
+    width: 50px;
+}
+
+.leaderboard-name {
+    flex: 1;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.leaderboard-score {
+    font-weight: bold;
+    color: #00ff41;
+}
+
+/* 에러 메시지 */
+.error-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.error-content {
+    background: rgba(255, 107, 107, 0.1);
+    border: 2px solid #ff6b6b;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.error-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.error-text {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* 유틸리티 클래스 */
+.hidden {
+    display: none !important;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .terminal-container {
+        padding: 10px;
+    }
+    
+    .screen {
+        padding: 20px;
+        max-height: 90vh;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .status-item {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .ascii-art, .ascii-scene {
+        font-size: 10px;
+    }
+}
