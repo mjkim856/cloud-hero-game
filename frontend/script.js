@@ -198,13 +198,25 @@ class CloudHeroGame {
         }
     }
 
-    displayQuestion(questionData) {
-        console.log('📋 문제 표시:', questionData.question_number, '/', questionData.total_questions);
+    displayQuestion(responseData) {
+        console.log('📋 문제 표시 시작:', responseData);
+        
+        // API 응답에서 실제 문제 데이터 추출
+        const questionData = responseData.question;
+        const progress = responseData.progress;
+        
+        if (!questionData) {
+            console.error('❌ 문제 데이터가 없습니다:', responseData);
+            this.showError('문제 데이터를 불러올 수 없습니다.');
+            return;
+        }
+        
+        console.log('📋 문제 표시:', progress.current, '/', progress.total);
         
         // 진행률 업데이트
-        const progress = (questionData.question_number / questionData.total_questions) * 100;
-        this.elements.progressFill.style.width = `${progress}%`;
-        this.elements.progressText.textContent = `${questionData.question_number}/${questionData.total_questions}`;
+        const progressPercent = (progress.current / progress.total) * 100;
+        this.elements.progressFill.style.width = `${progressPercent}%`;
+        this.elements.progressText.textContent = `${progress.current}/${progress.total}`;
 
         // ASCII 아트 표시 (안전한 처리)
         if (questionData.ascii_scene && Array.isArray(questionData.ascii_scene)) {
@@ -223,13 +235,22 @@ class CloudHeroGame {
         }
 
         // 시나리오 텍스트 표시
-        this.elements.scenarioText.textContent = questionData.scenario;
+        this.elements.scenarioText.textContent = questionData.scenario || '문제를 불러오는 중...';
 
         // 선택지 생성
         this.createChoices(questionData.choices);
     }
 
     createChoices(choices) {
+        console.log('🎯 선택지 생성 시작');
+        
+        // 안전한 처리
+        if (!choices || !Array.isArray(choices) || choices.length === 0) {
+            console.warn('⚠️ 선택지 데이터가 없습니다:', choices);
+            this.elements.choicesContainer.innerHTML = '<p class="error-message">선택지를 불러올 수 없습니다.</p>';
+            return;
+        }
+        
         console.log('🎯 선택지 생성:', choices.length, '개');
         this.elements.choicesContainer.innerHTML = '';
         
