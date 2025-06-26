@@ -150,13 +150,27 @@ def submit_answer():
     try:
         data = request.get_json()
         session_id = data.get('session_id')
-        answer = data.get('answer')
+        # 두 가지 필드명 모두 지원
+        answer = data.get('answer') or data.get('selected_answer')
+        
+        print(f"📤 답안 제출 요청: session_id={session_id}, answer={answer}")
+        print(f"📤 전체 요청 데이터: {data}")
+        
+        if not session_id:
+            return jsonify({'error': 'session_id가 필요합니다.'}), 400
+            
+        if answer is None:
+            return jsonify({'error': 'answer 또는 selected_answer가 필요합니다.'}), 400
         
         if session_id not in game_sessions:
             return jsonify({'error': '유효하지 않은 세션입니다.'}), 400
         
         session = game_sessions[session_id]
         current_q = session['current_question']
+        
+        if current_q >= len(game_data['questions']):
+            return jsonify({'error': '더 이상 문제가 없습니다.'}), 400
+            
         question = game_data['questions'][current_q]
         
         is_correct = answer == question['correct_answer']
@@ -179,7 +193,7 @@ def submit_answer():
         result = {
             'is_correct': is_correct,
             'correct_answer': question['correct_answer'],
-            'selected_choice': question['choices'][answer],
+            'selected_choice': question['choices'][answer] if answer < len(question['choices']) else '알 수 없음',
             'explanation': question['explanation'],
             'reference_url': question.get('reference_url', ''),
             'current_score': session['score'],
@@ -198,6 +212,16 @@ def submit_answer():
                 'accuracy': accuracy,
                 'player_name': player_name,
                 'personalized_message': f"축하합니다, {player_name}님! 정답률 {accuracy:.0f}%로 게임을 완료했습니다!"
+            })
+            
+            print(f"🎉 게임 완료: {player_name} - 점수: {session['score']}, 정답률: {accuracy:.1f}%")
+        
+        print(f"✅ 답안 제출 성공: {result}")
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"❌ 답안 제출 오류: {e}")
+        return jsonify({'error': str(e)}), 500
             })
             
             print(f"🎉 게임 완료: {player_name} - 점수: {session['score']}, 정답률: {accuracy:.1f}%")

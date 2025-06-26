@@ -289,12 +289,18 @@ class CloudHeroGame {
     async submitAnswer(selectedAnswer) {
         console.log('📤 답안 제출 시작:', selectedAnswer, '세션:', this.sessionId);
         
+        if (!this.sessionId) {
+            this.showError('세션이 만료되었습니다. 게임을 다시 시작해주세요.');
+            return;
+        }
+        
         try {
             this.showLoading();
             
             const requestData = {
                 session_id: this.sessionId,
-                selected_answer: selectedAnswer
+                selected_answer: selectedAnswer,
+                answer: selectedAnswer  // 백엔드 호환성을 위해 두 필드 모두 전송
             };
             
             console.log('📤 요청 데이터:', requestData);
@@ -311,8 +317,8 @@ class CloudHeroGame {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('❌ 답안 제출 실패:', errorText);
-                throw new Error('답안 제출에 실패했습니다.');
+                console.error('❌ 답안 제출 실패:', response.status, errorText);
+                throw new Error(`답안 제출에 실패했습니다. (${response.status})`);
             }
 
             const result = await response.json();
