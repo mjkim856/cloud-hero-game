@@ -206,8 +206,21 @@ class CloudHeroGame {
         this.elements.progressFill.style.width = `${progress}%`;
         this.elements.progressText.textContent = `${questionData.question_number}/${questionData.total_questions}`;
 
-        // 아스키 아트 표시
-        this.elements.questionAscii.textContent = questionData.ascii_scene.join('\n');
+        // ASCII 아트 표시 (안전한 처리)
+        if (questionData.ascii_scene && Array.isArray(questionData.ascii_scene)) {
+            this.elements.questionAscii.textContent = questionData.ascii_scene.join('\n');
+        } else if (questionData.ascii_art && Array.isArray(questionData.ascii_art)) {
+            this.elements.questionAscii.textContent = questionData.ascii_art.join('\n');
+        } else {
+            // 기본 ASCII 아트
+            this.elements.questionAscii.textContent = `
+    ╔══════════════════════════════════════════════════════════════════════════╗
+    ║                            🎮 클라우드 용사                              ║
+    ║                                                                            ║
+    ║                          AWS 문제를 해결하세요!                          ║
+    ╚══════════════════════════════════════════════════════════════════════════╝
+            `;
+        }
 
         // 시나리오 텍스트 표시
         this.elements.scenarioText.textContent = questionData.scenario;
