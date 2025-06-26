@@ -3,47 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>클라우드 용사 - Cloud Hero Game</title>
+    <title>클라우드 용사 - 디버그 모드</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .debug-panel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ff6b6b;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: #ff6b6b;
+            z-index: 2000;
+            max-width: 300px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .debug-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffaa00;
+        }
+        
+        .debug-log {
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+        
+        .test-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ff6b6b, #ffaa00);
+            color: #000;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            z-index: 2000;
+            font-size: 14px;
+        }
+        
+        .terminal-container {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    <div class="terminal-container">
-        <!-- 언어 선택 화면 -->
-        <div id="language-screen" class="screen active">
-            <div class="language-select-container">
-                <div class="ascii-art" id="language-ascii"></div>
-                <div class="language-title-container">
-                    <h1 id="language-title" class="language-title">클라우드 용사</h1>
-                    <h2 id="language-subtitle" class="language-subtitle">Cloud Hero Game</h2>
-                </div>
-                <div class="language-selection">
-                    <p id="select-language-text" class="select-language-text">언어를 선택하세요</p>
-                    <div class="language-buttons">
-                        <button id="select-korean" class="language-button korean-btn">
-                            <span class="flag">🇰🇷</span>
-                            <span class="lang-text">한국어</span>
-                        </button>
-                        <button id="select-english" class="language-button english-btn">
-                            <span class="flag">🇺🇸</span>
-                            <span class="lang-text">English</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- 디버그 배너 -->
+    <div class="test-banner">
+        🐛 디버그 모드 - 콘솔을 열어서 로그를 확인하세요 (F12)
+    </div>
 
+    <!-- 디버그 패널 -->
+    <div class="debug-panel">
+        <div class="debug-title">🐛 디버그 정보</div>
+        <div id="debug-log" class="debug-log">
+            게임 로딩 중...
+        </div>
+    </div>
+
+    <!-- 메인 게임 UI -->
+    <div class="terminal-container">
         <!-- 게임 시작 화면 -->
-        <div id="welcome-screen" class="screen">
+        <div id="welcome-screen" class="screen active">
             <div class="ascii-art" id="welcome-ascii"></div>
             <div class="input-section">
                 <div class="prompt">
                     <span class="prompt-symbol">$</span>
-                    <span id="prompt-text" class="prompt-text">용사의 이름을 입력하세요:</span>
+                    <span class="prompt-text">용사의 이름을 입력하세요:</span>
                 </div>
-                <input type="text" id="player-name" class="terminal-input" placeholder="이름을 입력하고 Enter를 누르세요" maxlength="20">
+                <input type="text" id="player-name" class="terminal-input" placeholder="이름을 입력하고 Enter를 누르세요" maxlength="20" value="디버그용사">
                 <button id="start-game" class="terminal-button">게임 시작</button>
             </div>
         </div>
@@ -93,11 +130,11 @@
                 <div class="result-header" id="result-header"></div>
                 <div class="result-content">
                     <div class="result-item">
-                        <span class="result-label selected-answer-label">선택한 답:</span>
+                        <span class="result-label">선택한 답:</span>
                         <span id="selected-answer" class="result-value"></span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label correct-answer-label">정답:</span>
+                        <span class="result-label">정답:</span>
                         <span id="correct-answer" class="result-value"></span>
                     </div>
                     <div class="explanation-container">
@@ -164,7 +201,39 @@
         <div class="matrix-rain"></div>
     </div>
 
-    <script src="languages.js"></script>
-    <script src="script.js"></script>
+    <script src="script_test_debug.js"></script>
+    <script>
+        // 디버그 로그 표시
+        const debugLog = document.getElementById('debug-log');
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        
+        function addDebugLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            
+            const div = document.createElement('div');
+            div.textContent = logEntry;
+            div.style.color = type === 'error' ? '#ff6b6b' : '#00ff41';
+            
+            debugLog.appendChild(div);
+            debugLog.scrollTop = debugLog.scrollHeight;
+            
+            // 최대 20개 로그만 유지
+            while (debugLog.children.length > 20) {
+                debugLog.removeChild(debugLog.firstChild);
+            }
+        }
+        
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addDebugLog(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addDebugLog(args.join(' '), 'error');
+        };
+    </script>
 </body>
 </html>

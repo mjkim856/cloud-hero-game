@@ -1,6 +1,6 @@
 """
-클라우드 용사 게임 백엔드 API 서버
-Flask를 사용한 게임 로직 및 데이터 관리
+클라우드 용사 게임 백엔드 API 서버 (최종 버전)
+리더보드 제거, 플레이어 이름 포함 엔딩 메시지
 """
 
 from flask import Flask, request, jsonify, session
@@ -18,7 +18,7 @@ CORS(app)
 def load_game_data():
     """게임 데이터 JSON 파일 로드"""
     try:
-        with open('game_data.json', 'r', encoding='utf-8') as f:
+        with open('game_data_final.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
         return {"error": "게임 데이터를 찾을 수 없습니다."}
@@ -38,8 +38,9 @@ game_sessions = {}
 def home():
     """서버 상태 확인"""
     return jsonify({
-        "message": "클라우드 용사 게임 서버가 실행 중입니다!",
+        "message": "🎮 클라우드 용사 게임 서버가 실행 중입니다!",
         "status": "running",
+        "port": 5001,
         "timestamp": datetime.now().isoformat()
     })
 
@@ -87,13 +88,22 @@ def get_question(session_id):
     questions = game_data.get('questions', [])
     
     if current_q_index >= len(questions):
-        # 게임 완료
+        # 게임 완료 - 플레이어 이름을 포함한 엔딩 메시지
+        ending_message = game_data.get('ending_message', {}).get('success', [])
+        
+        # 플레이어 이름을 메시지에 삽입
+        personalized_ending = []
+        for line in ending_message:
+            personalized_line = line.replace('{player_name}', session_data['player_name'])
+            personalized_ending.append(personalized_line)
+        
         return jsonify({
             "game_completed": True,
             "final_score": session_data['score'],
             "correct_answers": session_data['correct_answers'],
             "total_questions": len(questions),
-            "ending_message": game_data.get('ending_message', {}).get('success', [])
+            "ending_message": personalized_ending,
+            "player_name": session_data['player_name']
         })
     
     current_question = questions[current_q_index]
@@ -174,32 +184,6 @@ def get_game_status(session_id):
         "progress_percentage": round((session_data['current_question'] / total_questions) * 100, 1)
     })
 
-@app.route('/api/game/leaderboard')
-def get_leaderboard():
-    """리더보드 - 완료된 게임들의 점수"""
-    completed_games = []
-    
-    for session_id, session_data in game_sessions.items():
-        game_data = load_game_data()
-        total_questions = len(game_data.get('questions', []))
-        
-        if session_data['current_question'] >= total_questions:
-            completed_games.append({
-                'player_name': session_data['player_name'],
-                'score': session_data['score'],
-                'correct_answers': session_data['correct_answers'],
-                'total_questions': total_questions,
-                'completion_rate': round((session_data['correct_answers'] / total_questions) * 100, 1)
-            })
-    
-    # 점수순으로 정렬
-    completed_games.sort(key=lambda x: x['score'], reverse=True)
-    
-    return jsonify({
-        "leaderboard": completed_games[:10],  # 상위 10명
-        "total_completed_games": len(completed_games)
-    })
-
 @app.route('/api/game/reset/<session_id>', methods=['POST'])
 def reset_game(session_id):
     """게임 재시작"""
@@ -225,19 +209,17 @@ def debug_sessions():
         "sessions": {k: {
             "player_name": v['player_name'],
             "current_question": v['current_question'],
-            "score": v['score']
+            "score": v['score'],
+            "correct_answers": v['correct_answers'],
+            "total_answers": len(v['answers'])
         } for k, v in game_sessions.items()}
     })
 
 if __name__ == '__main__':
-    print("🎮 클라우드 용사 게임 서버 시작!")
-    print("📡 API 엔드포인트:")
-    print("   POST /api/game/start - 게임 시작")
-    print("   GET  /api/game/question/<session_id> - 문제 가져오기")
-    print("   POST /api/game/answer - 답안 제출")
-    print("   GET  /api/game/status/<session_id> - 게임 상태")
-    print("   GET  /api/game/leaderboard - 리더보드")
-    print("   POST /api/game/reset/<session_id> - 게임 재시작")
-    print("🚀 서버 실행 중...")
-    
-    app.run(debug=True, host='0.0.0.0', port=5002)
+    print("🎮 클라우드 용사 게임 서버 시작! (최종 버전)")
+    print("📡 테스트 URL: http://localhost:5001")
+    print("✨ 새로운 기능:")
+    print("   - 리더보드 제거")
+    print("   - 플레이어 이름 포함 엔딩 메시지")
+    print("   - 영어 AWS 문서 링크")
+    app.run(debug=True, host='0.0.0.0', port=5001)

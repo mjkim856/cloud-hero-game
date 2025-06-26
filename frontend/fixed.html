@@ -3,47 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>클라우드 용사 - Cloud Hero Game</title>
+    <title>클라우드 용사 - 수정된 버전</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .fix-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #00ff41, #00ff88);
+            color: #000;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            z-index: 2000;
+            font-size: 14px;
+        }
+        
+        .terminal-container {
+            margin-top: 30px;
+        }
+        
+        .next-question-debug {
+            background: rgba(255, 170, 0, 0.1) !important;
+            border: 2px solid #ffaa00 !important;
+            color: #ffaa00 !important;
+        }
+        
+        .next-question-debug:hover {
+            background: rgba(255, 170, 0, 0.2) !important;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.5) !important;
+        }
+    </style>
 </head>
 <body>
-    <div class="terminal-container">
-        <!-- 언어 선택 화면 -->
-        <div id="language-screen" class="screen active">
-            <div class="language-select-container">
-                <div class="ascii-art" id="language-ascii"></div>
-                <div class="language-title-container">
-                    <h1 id="language-title" class="language-title">클라우드 용사</h1>
-                    <h2 id="language-subtitle" class="language-subtitle">Cloud Hero Game</h2>
-                </div>
-                <div class="language-selection">
-                    <p id="select-language-text" class="select-language-text">언어를 선택하세요</p>
-                    <div class="language-buttons">
-                        <button id="select-korean" class="language-button korean-btn">
-                            <span class="flag">🇰🇷</span>
-                            <span class="lang-text">한국어</span>
-                        </button>
-                        <button id="select-english" class="language-button english-btn">
-                            <span class="flag">🇺🇸</span>
-                            <span class="lang-text">English</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- 수정 배너 -->
+    <div class="fix-banner">
+        🔧 수정된 버전 - "다음 문제" 버튼 문제 해결됨!
+    </div>
 
+    <!-- 메인 게임 UI -->
+    <div class="terminal-container">
         <!-- 게임 시작 화면 -->
-        <div id="welcome-screen" class="screen">
+        <div id="welcome-screen" class="screen active">
             <div class="ascii-art" id="welcome-ascii"></div>
             <div class="input-section">
                 <div class="prompt">
                     <span class="prompt-symbol">$</span>
-                    <span id="prompt-text" class="prompt-text">용사의 이름을 입력하세요:</span>
+                    <span class="prompt-text">용사의 이름을 입력하세요:</span>
                 </div>
-                <input type="text" id="player-name" class="terminal-input" placeholder="이름을 입력하고 Enter를 누르세요" maxlength="20">
+                <input type="text" id="player-name" class="terminal-input" placeholder="이름을 입력하고 Enter를 누르세요" maxlength="20" value="수정테스트">
                 <button id="start-game" class="terminal-button">게임 시작</button>
             </div>
         </div>
@@ -93,11 +105,11 @@
                 <div class="result-header" id="result-header"></div>
                 <div class="result-content">
                     <div class="result-item">
-                        <span class="result-label selected-answer-label">선택한 답:</span>
+                        <span class="result-label">선택한 답:</span>
                         <span id="selected-answer" class="result-value"></span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label correct-answer-label">정답:</span>
+                        <span class="result-label">정답:</span>
                         <span id="correct-answer" class="result-value"></span>
                     </div>
                     <div class="explanation-container">
@@ -110,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="next-question" class="terminal-button">다음 문제</button>
+                <button id="next-question" class="terminal-button next-question-debug">🔧 다음 문제 (수정됨)</button>
             </div>
         </div>
 
@@ -164,7 +176,6 @@
         <div class="matrix-rain"></div>
     </div>
 
-    <script src="languages.js"></script>
-    <script src="script.js"></script>
+    <script src="script_fixed.js"></script>
 </body>
 </html>

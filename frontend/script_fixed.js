@@ -1,27 +1,24 @@
 /**
- * 클라우드 용사 게임 JavaScript
- * 게임 로직 및 UI 제어
+ * 클라우드 용사 게임 JavaScript (수정된 버전)
  */
 
 class CloudHeroGame {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5000/api';
+        this.apiBaseUrl = 'http://localhost:5001/api';
         this.sessionId = null;
         this.currentQuestion = null;
         this.gameData = null;
         
-        // 언어 설정 초기화
-        loadSavedLanguage();
-        
+        console.log('🎮 게임 초기화 시작');
         this.initializeElements();
         this.bindEvents();
-        this.showLanguageScreen();
+        this.showWelcomeScreen();
     }
 
     initializeElements() {
+        console.log('📋 UI 요소 초기화');
         // 화면 요소들
         this.screens = {
-            language: document.getElementById('language-screen'),
             welcome: document.getElementById('welcome-screen'),
             game: document.getElementById('game-screen'),
             result: document.getElementById('result-screen'),
@@ -31,10 +28,6 @@ class CloudHeroGame {
 
         // 입력 요소들
         this.elements = {
-            // 언어 선택 요소들
-            selectKoreanBtn: document.getElementById('select-korean'),
-            selectEnglishBtn: document.getElementById('select-english'),
-            
             playerNameInput: document.getElementById('player-name'),
             startGameBtn: document.getElementById('start-game'),
             currentPlayer: document.getElementById('current-player'),
@@ -66,18 +59,19 @@ class CloudHeroGame {
     }
 
     bindEvents() {
-        // 언어 선택
-        this.elements.selectKoreanBtn.addEventListener('click', () => this.selectLanguage('ko'));
-        this.elements.selectEnglishBtn.addEventListener('click', () => this.selectLanguage('en'));
-        
+        console.log('🔗 이벤트 바인딩');
         // 게임 시작
         this.elements.startGameBtn.addEventListener('click', () => this.startGame());
         this.elements.playerNameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.startGame();
         });
 
-        // 게임 진행
-        this.elements.nextQuestionBtn.addEventListener('click', () => this.loadNextQuestion());
+        // 🔧 수정: 다음 문제 버튼 이벤트 리스너 수정
+        this.elements.nextQuestionBtn.addEventListener('click', (e) => {
+            console.log('🔄 다음 문제 버튼 클릭됨');
+            e.preventDefault();
+            this.loadNextQuestion();
+        });
 
         // 게임 완료 후 액션
         this.elements.restartGameBtn.addEventListener('click', () => this.restartGame());
@@ -88,51 +82,11 @@ class CloudHeroGame {
         this.elements.errorCloseBtn.addEventListener('click', () => this.hideError());
     }
 
-    // 언어 선택 화면 표시
-    showLanguageScreen() {
-        this.hideAllScreens();
-        this.screens.language.classList.add('active');
-        this.displayLanguageAscii();
-        updateLanguageSelectTexts();
-    }
-
-    // 언어 선택
-    selectLanguage(lang) {
-        setLanguage(lang);
-        this.showWelcomeScreen();
-    }
-
-    // 언어 선택 화면 ASCII 아트
-    displayLanguageAscii() {
-        const ascii = `
-    ╔═══════════════════════════════════════════════════════════════╗
-    ║  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ██╗  ██╗███████╗║
-    ║ ██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ██║  ██║██╔════╝║
-    ║ ██║     ██║     ██║   ██║██║   ██║██║  ██║    ███████║█████╗  ║
-    ║ ██║     ██║     ██║   ██║██║   ██║██║  ██║    ██╔══██║██╔══╝  ║
-    ║ ╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝    ██║  ██║███████╗║
-    ║  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚══════╝║
-    ║                                                                 ║
-    ║    ██████╗  █████╗ ███╗   ███╗███████╗                        ║
-    ║   ██╔════╝ ██╔══██╗████╗ ████║██╔════╝                        ║
-    ║   ██║  ███╗███████║██╔████╔██║█████╗                          ║
-    ║   ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝                          ║
-    ║   ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗                        ║
-    ║    ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝                        ║
-    ╚═══════════════════════════════════════════════════════════════╝
-        `;
-        
-        const languageAscii = document.getElementById('language-ascii');
-        if (languageAscii) {
-            languageAscii.textContent = ascii;
-        }
-    }
-
     showWelcomeScreen() {
+        console.log('🏠 환영 화면 표시');
         this.hideAllScreens();
         this.screens.welcome.classList.add('active');
         this.displayWelcomeAscii();
-        updateWelcomeTexts();
         this.elements.playerNameInput.focus();
     }
 
@@ -167,6 +121,7 @@ class CloudHeroGame {
 
     async startGame() {
         const playerName = this.elements.playerNameInput.value.trim() || '용사';
+        console.log('🚀 게임 시작:', playerName);
         
         try {
             this.showLoading();
@@ -179,11 +134,15 @@ class CloudHeroGame {
                 body: JSON.stringify({ player_name: playerName })
             });
 
+            console.log('📡 게임 시작 응답:', response.status);
+
             if (!response.ok) {
                 throw new Error('게임 시작에 실패했습니다.');
             }
 
             const data = await response.json();
+            console.log('✅ 게임 시작 성공:', data);
+            
             this.sessionId = data.session_id;
             this.elements.currentPlayer.textContent = data.player_name;
             
@@ -192,32 +151,42 @@ class CloudHeroGame {
             this.loadQuestion();
             
         } catch (error) {
+            console.error('❌ 게임 시작 오류:', error);
             this.hideLoading();
-            this.showError(currentLanguage === 'ko' ? 
-                '게임 시작 중 오류가 발생했습니다: ' + error.message :
-                'Error starting game: ' + error.message);
+            this.showError('게임 시작 중 오류가 발생했습니다: ' + error.message);
         }
     }
 
     showGameScreen() {
+        console.log('🎮 게임 화면 표시');
         this.hideAllScreens();
         this.screens.game.classList.add('active');
-        updateGameTexts();
     }
 
     async loadQuestion() {
+        console.log('📝 문제 로딩 시작, 세션 ID:', this.sessionId);
+        
+        if (!this.sessionId) {
+            console.error('❌ 세션 ID가 없습니다!');
+            this.showError('세션이 만료되었습니다. 게임을 다시 시작해주세요.');
+            return;
+        }
+        
         try {
             this.showLoading();
             
             const response = await fetch(`${this.apiBaseUrl}/game/question/${this.sessionId}`);
+            console.log('📡 문제 로딩 응답:', response.status);
             
             if (!response.ok) {
                 throw new Error('문제를 불러오는데 실패했습니다.');
             }
 
             const data = await response.json();
+            console.log('✅ 문제 로딩 성공:', data);
             
             if (data.game_completed) {
+                console.log('🏆 게임 완료!');
                 this.hideLoading();
                 this.showEndingScreen(data);
                 return;
@@ -228,14 +197,15 @@ class CloudHeroGame {
             this.hideLoading();
             
         } catch (error) {
+            console.error('❌ 문제 로딩 오류:', error);
             this.hideLoading();
-            this.showError(currentLanguage === 'ko' ? 
-                '문제 로딩 중 오류가 발생했습니다: ' + error.message :
-                'Error loading question: ' + error.message);
+            this.showError('문제 로딩 중 오류가 발생했습니다: ' + error.message);
         }
     }
 
     displayQuestion(questionData) {
+        console.log('📋 문제 표시:', questionData.question_number, '/', questionData.total_questions);
+        
         // 진행률 업데이트
         const progress = (questionData.question_number / questionData.total_questions) * 100;
         this.elements.progressFill.style.width = `${progress}%`;
@@ -252,6 +222,7 @@ class CloudHeroGame {
     }
 
     createChoices(choices) {
+        console.log('🎯 선택지 생성:', choices.length, '개');
         this.elements.choicesContainer.innerHTML = '';
         
         choices.forEach((choice, index) => {
@@ -261,6 +232,7 @@ class CloudHeroGame {
             button.setAttribute('data-index', index + 1);
             
             button.addEventListener('click', () => {
+                console.log('🎯 선택지 클릭:', index, choice);
                 this.selectChoice(index, button);
             });
             
@@ -269,6 +241,8 @@ class CloudHeroGame {
     }
 
     selectChoice(answerIndex, buttonElement) {
+        console.log('✅ 답안 선택:', answerIndex);
+        
         // 모든 선택지에서 selected 클래스 제거
         document.querySelectorAll('.choice-button').forEach(btn => {
             btn.classList.remove('selected');
@@ -284,47 +258,56 @@ class CloudHeroGame {
     }
 
     async submitAnswer(selectedAnswer) {
+        console.log('📤 답안 제출 시작:', selectedAnswer, '세션:', this.sessionId);
+        
         try {
             this.showLoading();
+            
+            const requestData = {
+                session_id: this.sessionId,
+                selected_answer: selectedAnswer
+            };
+            
+            console.log('📤 요청 데이터:', requestData);
             
             const response = await fetch(`${this.apiBaseUrl}/game/answer`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    session_id: this.sessionId,
-                    selected_answer: selectedAnswer
-                })
+                body: JSON.stringify(requestData)
             });
 
+            console.log('📡 답안 제출 응답:', response.status);
+
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ 답안 제출 실패:', errorText);
                 throw new Error('답안 제출에 실패했습니다.');
             }
 
             const result = await response.json();
+            console.log('✅ 답안 제출 성공:', result);
+            
             this.hideLoading();
             this.showResult(result, selectedAnswer);
             
         } catch (error) {
+            console.error('❌ 답안 제출 오류:', error);
             this.hideLoading();
-            this.showError(currentLanguage === 'ko' ? 
-                '답안 제출 중 오류가 발생했습니다: ' + error.message :
-                'Error submitting answer: ' + error.message);
+            this.showError('답안 제출 중 오류가 발생했습니다: ' + error.message);
         }
     }
 
     showResult(result, selectedAnswerIndex) {
+        console.log('📊 결과 화면 표시:', result.is_correct ? '정답' : '오답');
+        
         this.hideAllScreens();
         this.screens.result.classList.add('active');
-        updateResultTexts();
 
         // 결과 헤더
         const isCorrect = result.is_correct;
-        const headerText = isCorrect ? 
-            (currentLanguage === 'ko' ? '🎉 정답입니다!' : '🎉 Correct!') :
-            (currentLanguage === 'ko' ? '❌ 틀렸습니다!' : '❌ Incorrect!');
-        this.elements.resultHeader.textContent = headerText;
+        this.elements.resultHeader.textContent = isCorrect ? '🎉 정답입니다!' : '❌ 틀렸습니다!';
         this.elements.resultHeader.className = `result-header ${isCorrect ? 'correct' : 'incorrect'}`;
 
         // 답안 정보
@@ -339,31 +322,22 @@ class CloudHeroGame {
         this.elements.currentScore.textContent = result.current_score;
     }
 
+    // 🔧 수정: loadNextQuestion 메서드 개선
     async loadNextQuestion() {
+        console.log('➡️ 다음 문제로 이동 요청');
+        
+        // 결과 화면을 숨기고 게임 화면으로 전환
+        this.hideAllScreens();
+        this.screens.game.classList.add('active');
+        
+        // 새로운 문제 로딩
         await this.loadQuestion();
     }
 
     async showEndingScreen(gameData = null) {
+        console.log('🏆 게임 완료 화면 표시');
         this.hideAllScreens();
         this.screens.ending.classList.add('active');
-        updateEndingTexts();
-
-        if (!gameData) {
-            // 게임 상태 다시 가져오기
-            try {
-                const response = await fetch(`${this.apiBaseUrl}/game/status/${this.sessionId}`);
-                const statusData = await response.json();
-                
-                const questionResponse = await fetch(`${this.apiBaseUrl}/game/question/${this.sessionId}`);
-                const questionData = await questionResponse.json();
-                
-                if (questionData.game_completed) {
-                    gameData = questionData;
-                }
-            } catch (error) {
-                console.error('게임 상태 확인 중 오류:', error);
-            }
-        }
 
         if (gameData && gameData.ending_message) {
             this.elements.endingAscii.textContent = gameData.ending_message.join('\n');
@@ -379,60 +353,8 @@ class CloudHeroGame {
         }
     }
 
-    async showLeaderboard() {
-        this.hideAllScreens();
-        this.screens.leaderboard.classList.add('active');
-        updateLeaderboardTexts();
-
-        try {
-            const response = await fetch(`${this.apiBaseUrl}/game/leaderboard`);
-            const data = await response.json();
-            
-            this.displayLeaderboard(data.leaderboard);
-            
-        } catch (error) {
-            this.showError(currentLanguage === 'ko' ? 
-                '리더보드를 불러오는데 실패했습니다: ' + error.message :
-                'Failed to load leaderboard: ' + error.message);
-        }
-    }
-
-    displayLeaderboard(leaderboard) {
-        this.elements.leaderboardContent.innerHTML = '';
-        
-        if (leaderboard.length === 0) {
-            this.elements.leaderboardContent.innerHTML = '<p>아직 완료된 게임이 없습니다.</p>';
-            return;
-        }
-
-        leaderboard.forEach((player, index) => {
-            const item = document.createElement('div');
-            item.className = 'leaderboard-item';
-            
-            const rank = index + 1;
-            const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-            
-            item.innerHTML = `
-                <div class="leaderboard-rank">${medal}</div>
-                <div class="leaderboard-name">${player.player_name}</div>
-                <div class="leaderboard-score">${player.score}점 (${player.completion_rate}%)</div>
-            `;
-            
-            this.elements.leaderboardContent.appendChild(item);
-        });
-    }
-
     async restartGame() {
-        if (this.sessionId) {
-            try {
-                await fetch(`${this.apiBaseUrl}/game/reset/${this.sessionId}`, {
-                    method: 'POST'
-                });
-            } catch (error) {
-                console.error('게임 리셋 중 오류:', error);
-            }
-        }
-        
+        console.log('🔄 게임 재시작');
         this.sessionId = null;
         this.currentQuestion = null;
         this.elements.currentScore.textContent = '0';
@@ -451,7 +373,7 @@ class CloudHeroGame {
     }
 
     showError(message) {
-        updateErrorTexts();
+        console.error('🚨 에러 표시:', message);
         this.elements.errorText.textContent = message;
         this.elements.errorMessage.classList.remove('hidden');
     }
@@ -469,8 +391,8 @@ class CloudHeroGame {
 
 // 게임 초기화
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎮 클라우드 용사 게임이 로드되었습니다!');
-    new CloudHeroGame();
+    console.log('🎮 클라우드 용사 게임이 로드되었습니다! (수정된 버전)');
+    window.game = new CloudHeroGame(); // 전역 변수로 설정하여 디버깅 가능
 });
 
 // 키보드 단축키

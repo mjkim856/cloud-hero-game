@@ -1,0 +1,261 @@
+{
+  "game_info": {
+    "title": "클라우드 용사",
+    "description": "클라우드 세계에 이슈가 발생했다! 용사의 힘이 필요하다!",
+    "ascii_art": {
+      "hero": [
+        "    /\\   /\\",
+        "   (  . .)  ",
+        "    )   (   ",
+        "   (  v  )  ",
+        "  ^^  |  ^^ ",
+        "     /|\\    ",
+        "    / | \\   ",
+        "   /  |  \\  "
+      ],
+      "cloud": [
+        "     .-~~~-.",
+        "    /       \\",
+        "   |  AWS    |",
+        "    \\       /",
+        "     '~~~~~' "
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "scenario": "당신은 마을의 앞에 도착했다! 구름 위에서 서버를 가동하는 이 서비스의 명칭은 무엇일까?",
+      "ascii_scene": [
+        "    .-~~~-.    ",
+        "   /       \\   ",
+        "  | SERVER  |  ",
+        "   \\       /   ",
+        "    '~~~~~'    ",
+        "       |       ",
+        "   [VILLAGE]   "
+      ],
+      "choices": [
+        "EC2",
+        "S3",
+        "Lambda",
+        "RDS"
+      ],
+      "correct_answer": 0,
+      "explanation": "Amazon EC2(Elastic Compute Cloud)는 클라우드에서 확장 가능한 컴퓨팅 용량을 제공하는 웹 서비스입니다.",
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html"
+    },
+    {
+      "id": 2,
+      "scenario": "EC2 광산의 깊은 곳에서 인스턴스들이 폭주 중이다. 인스턴스들은 'Out of memory: kill process xxxxx!' 라고 외치며 갈팡질팡 뛰어다닌다. 당신은 어떤 선택을 해야 할까?",
+      "ascii_scene": [
+        "   ⚠️  ERROR  ⚠️   ",
+        "  ┌─────────────┐  ",
+        "  │ OUT OF      │  ",
+        "  │ MEMORY!     │  ",
+        "  │ KILL PROC   │  ",
+        "  └─────────────┘  ",
+        "    💥 💥 💥     "
+      ],
+      "choices": [
+        "계속 재부팅한다",
+        "인스턴스를 중지하고 더 큰 인스턴스 유형을 선택한 뒤 다시 시작한다",
+        "인스턴스를 삭제한다",
+        "아무것도 하지 않는다"
+      ],
+      "correct_answer": 1,
+      "explanation": "메모리 부족 오류가 발생하면 인스턴스를 중지하고 더 큰 인스턴스 유형으로 변경하여 메모리를 늘려야 합니다.",
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html"
+    },
+    {
+      "id": 3,
+      "scenario": "S3 보물창고에서 중요한 데이터가 실수로 삭제되었다! 마을 사람들이 울고 있다. 데이터를 복구할 수 있는 방법은?",
+      "ascii_scene": [
+        "   📦 S3 VAULT   ",
+        "  ┌─────────────┐ ",
+        "  │    EMPTY    │ ",
+        "  │   😭😭😭    │ ",
+        "  │  DELETED!   │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "포기한다",
+        "버전 관리(Versioning)가 활성화되어 있다면 이전 버전을 복원한다",
+        "새로 업로드한다",
+        "AWS 지원팀에 연락한다"
+      ],
+      "correct_answer": 1,
+      "explanation": "S3 버전 관리가 활성화되어 있으면 삭제된 객체의 이전 버전을 복원할 수 있습니다.",
+      "reference_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+    },
+    {
+      "id": 4,
+      "scenario": "Lambda 마법사의 탑에서 함수가 15분 넘게 실행되고 있다. 마법사가 '시간 초과다!' 라고 외친다. Lambda의 최대 실행 시간은?",
+      "ascii_scene": [
+        "    🏰 LAMBDA    ",
+        "   ┌─────────┐   ",
+        "   │ ⏰ 15min │   ",
+        "   │ TIMEOUT! │   ",
+        "   │ 🧙‍♂️ MAGE  │   ",
+        "   └─────────┘   "
+      ],
+      "choices": [
+        "5분",
+        "10분",
+        "15분",
+        "30분"
+      ],
+      "correct_answer": 2,
+      "explanation": "AWS Lambda 함수의 최대 실행 시간(타임아웃)은 15분입니다.",
+      "reference_url": "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+    },
+    {
+      "id": 5,
+      "scenario": "RDS 데이터베이스 성에서 갑자기 연결이 끊어졌다! 성주가 '다중 AZ 배포를 했어야 했는데...' 라고 한탄한다. 다중 AZ 배포의 주요 목적은?",
+      "ascii_scene": [
+        "   🏰 RDS DB    ",
+        "  ┌───────────┐  ",
+        "  │ CONNECTION│  ",
+        "  │   LOST!   │  ",
+        "  │     💔    │  ",
+        "  └───────────┘  "
+      ],
+      "choices": [
+        "성능 향상",
+        "비용 절감",
+        "고가용성 및 자동 장애 조치",
+        "보안 강화"
+      ],
+      "correct_answer": 2,
+      "explanation": "RDS 다중 AZ 배포는 고가용성을 제공하고 기본 DB 인스턴스에 장애가 발생할 때 자동으로 대기 인스턴스로 장애 조치를 수행합니다.",
+      "reference_url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+    },
+    {
+      "id": 6,
+      "scenario": "CloudFront 전령소에서 웹사이트를 업데이트했는데, 사용자들이 여전히 이전 버전을 보고 있다! 전령장이 '캐시가 문제야!' 라고 외친다. 가장 적절한 해결책은?",
+      "ascii_scene": [
+        "   🌐 CLOUDFRONT ",
+        "  ┌─────────────┐ ",
+        "  │ OLD CACHE   │ ",
+        "  │ 📄➡️📄 STUCK │ ",
+        "  │ INVALIDATE! │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "서버를 재시작한다",
+        "캐시 무효화(Cache Invalidation)를 실행한다",
+        "CloudFront를 삭제하고 다시 만든다",
+        "24시간 기다린다"
+      ],
+      "correct_answer": 1,
+      "explanation": "CloudFront에서 캐시된 콘텐츠를 즉시 업데이트하려면 캐시 무효화를 사용하여 특정 파일이나 경로의 캐시를 강제로 제거할 수 있습니다.",
+      "reference_url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html"
+    },
+    {
+      "id": 7,
+      "scenario": "IAM 보안관청에서 새로운 개발자에게 권한을 부여해야 한다. 보안관이 '최소 권한 원칙을 지켜야 해!' 라고 강조한다. 올바른 접근 방법은?",
+      "ascii_scene": [
+        "   🛡️ IAM OFFICE ",
+        "  ┌─────────────┐ ",
+        "  │ 👮‍♂️ SHERIFF │ ",
+        "  │ LEAST       │ ",
+        "  │ PRIVILEGE!  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "관리자 권한을 부여한다",
+        "필요한 최소한의 권한만 부여한다",
+        "모든 권한을 부여한다",
+        "권한을 부여하지 않는다"
+      ],
+      "correct_answer": 1,
+      "explanation": "IAM 최소 권한 원칙에 따라 사용자는 작업을 수행하는 데 필요한 최소한의 권한만 가져야 합니다.",
+      "reference_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    },
+    {
+      "id": 8,
+      "scenario": "Auto Scaling 훈련장에서 트래픽이 급증했다! 교관이 '스케일 아웃이 필요해!' 라고 외친다. 스케일 아웃의 의미는?",
+      "ascii_scene": [
+        "  📈 AUTO SCALING ",
+        "  ┌─────────────┐ ",
+        "  │ TRAFFIC ⬆️  │ ",
+        "  │ 👨‍🏫 TRAINER │ ",
+        "  │ SCALE OUT!  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "인스턴스의 크기를 늘린다",
+        "인스턴스의 개수를 늘린다",
+        "인스턴스를 삭제한다",
+        "인스턴스를 재시작한다"
+      ],
+      "correct_answer": 1,
+      "explanation": "스케일 아웃은 수평적 확장으로, 더 많은 인스턴스를 추가하여 부하를 분산시키는 것입니다.",
+      "reference_url": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
+    },
+    {
+      "id": 9,
+      "scenario": "보안 그룹 요새에서 웹 서버에 접속하려고 하는데 연결이 안 된다! 수비대장이 '포트 80이 막혀있어!' 라고 외친다. HTTP 트래픽을 허용하려면?",
+      "ascii_scene": [
+        "   🛡️ SECURITY    ",
+        "  ┌─────────────┐ ",
+        "  │ PORT 80 ❌  │ ",
+        "  │ 🚫 BLOCKED  │ ",
+        "  │ HTTP DENIED │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "인바운드 규칙에 포트 80(HTTP)을 0.0.0.0/0에서 허용한다",
+        "아웃바운드 규칙만 수정한다",
+        "보안 그룹을 삭제한다",
+        "인스턴스를 재시작한다"
+      ],
+      "correct_answer": 0,
+      "explanation": "웹 서버에 HTTP 접속을 허용하려면 보안 그룹의 인바운드 규칙에 포트 80을 추가해야 합니다. 0.0.0.0/0은 모든 IP에서의 접근을 허용합니다.",
+      "reference_url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
+    },
+    {
+      "id": 10,
+      "scenario": "모든 모험이 끝나고 용사가 다음 세계로 넘어가려 한다! 하지만 차원문을 여는 Bedrock AI 마법진이 'AccessDeniedException' 오류를 내며 작동하지 않는다. 마법사가 '모델 접근 권한이 없어!' 라고 외친다. 해결 방법은?",
+      "ascii_scene": [
+        "   🌀 PORTAL GATE  ",
+        "  ┌─────────────┐ ",
+        "  │ ❌ ACCESS    │ ",
+        "  │ DENIED!     │ ",
+        "  │ 🧙‍♂️ HELP ME! │ ",
+        "  │ 🚪➡️🌍 NEXT  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "서버를 재시작한다",
+        "Bedrock 콘솔에서 사용하려는 Foundation Model에 대한 액세스를 요청한다",
+        "다른 AI 서비스를 사용한다",
+        "권한을 무시하고 강제로 실행한다"
+      ],
+      "correct_answer": 1,
+      "explanation": "Bedrock에서 AccessDeniedException 오류가 발생하면, AWS 콘솔의 Bedrock 서비스에서 사용하려는 Foundation Model에 대한 액세스를 먼저 요청해야 합니다.",
+      "reference_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html"
+    }
+  ],
+  "ending_message": {
+    "success": [
+      "🎉 축하합니다! 🎉",
+      "",
+      "차원문이 열렸습니다!",
+      "{player_name}님은 클라우드 마을을 구하고",
+      "다음 세계로의 문을 열었습니다!",
+      "",
+      "   ⭐ CLOUD HERO ⭐",
+      "  ┌─────────────────┐",
+      "  │    🏆 WINNER    │",
+      "  │   AWS MASTER    │",
+      "  │  ☁️ ☁️ ☁️ ☁️   │",
+      "  │  🌀 PORTAL 🌀   │",
+      "  └─────────────────┘",
+      "",
+      "마을 사람들이 {player_name}님을",
+      "영웅으로 기억할 것입니다!",
+      "새로운 모험이 당신을 기다리고 있습니다!"
+    ]
+  }
+}
