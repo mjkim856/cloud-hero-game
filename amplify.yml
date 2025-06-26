@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "🎮 클라우드 용사 게임 빌드 시작!"
+    build:
+      commands:
+        - echo "📦 프론트엔드 파일 준비 중..."
+        - cp frontend/final_fixed.html frontend/index.html
+        - cp frontend/script_final_fixed.js frontend/script.js
+    postBuild:
+      commands:
+        - echo "✅ 빌드 완료!"
+  artifacts:
+    baseDirectory: frontend
+    files:
+      - '**/*'
+  cache:
+    paths: []
