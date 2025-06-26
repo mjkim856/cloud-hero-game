@@ -81,7 +81,7 @@ def style():
     except FileNotFoundError:
         return "스타일 파일을 찾을 수 없습니다!", 404
 
-# API 라우트들 (기존 백엔드 로직)
+# API 라우트들
 @application.route('/api/game/start', methods=['POST'])
 def start_game():
     """게임 시작"""
@@ -217,15 +217,6 @@ def submit_answer():
             print(f"🎉 게임 완료: {player_name} - 점수: {session['score']}, 정답률: {accuracy:.1f}%")
         
         print(f"✅ 답안 제출 성공: {result}")
-        return jsonify(result)
-        
-    except Exception as e:
-        print(f"❌ 답안 제출 오류: {e}")
-        return jsonify({'error': str(e)}), 500
-            })
-            
-            print(f"🎉 게임 완료: {player_name} - 점수: {session['score']}, 정답률: {accuracy:.1f}%")
-        
         return jsonify(result)
         
     except Exception as e:
