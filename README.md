@@ -1,170 +1,81 @@
-# 🎮 클라우드 용사 (Cloud Hero)
+# ⚔️ Cloud Hero Game (클라우드 용사)
 
-AWS 지식을 테스트하는 사지선다형 웹 게임입니다.
+AWS 클라우드 서비스에 대한 지식을 재미있는 RPG 게임으로 학습할 수 있는 웹 기반 퀴즈 게임입니다.
 
-![Game Preview](https://img.shields.io/badge/Game-Cloud%20Hero-brightgreen)
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
-![Flask](https://img.shields.io/badge/Flask-2.3.3-lightgrey)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
-
-## 🎯 게임 소개
+## 🎮 게임 소개
 
 클라우드 세계에 이슈가 발생했습니다! 용사의 힘이 필요합니다!
-AWS 서비스에 대한 지식을 활용해 클라우드 마을을 구해보세요.
 
-### 게임 특징
-- 🏰 **스토리 기반**: 클라우드 마을을 구하는 모험
-- 📚 **실무 중심**: AWS 공식 문서 기반 문제
-- 🎨 **터미널 스타일**: 사이버펑크 느낌의 UI
-- 🏆 **리더보드**: 다른 플레이어와 점수 경쟁
+플레이어는 클라우드 용사가 되어 다양한 AWS 서비스 관련 문제를 해결하며 모험을 떠납니다. 각 스테이지마다 실제 AWS 환경에서 발생할 수 있는 상황들을 시나리오로 구성하여, 학습과 재미를 동시에 제공합니다.
+
+## ✨ 게임 특징
+
+- **스토리텔링 기반 학습**: 각 문제마다 흥미로운 시나리오와 ASCII 아트로 몰입감 제공
+- **실무 중심 문제**: 실제 AWS 환경에서 발생할 수 있는 상황들을 바탕으로 한 문제 구성
+- **즉시 피드백**: 문제 해결 후 상세한 설명과 참고 자료 제공
+- **진행률 추적**: 실시간 점수 및 정답률 확인
+- **반응형 디자인**: 다양한 디바이스에서 최적화된 게임 경험
+- **개인화된 결과**: 플레이어 이름과 함께 개인화된 엔딩 메시지
 
 ## 🛠 기술 스택
 
-### 백엔드
-- **Python 3.8+**
-- **Flask 2.3.3** - 웹 서버
-- **Flask-CORS** - CORS 처리
-- **UUID** - 세션 관리
+### Backend
+- **Python 3.x**: 메인 서버 언어
+- **Flask**: 웹 프레임워크
+- **Flask-CORS**: Cross-Origin Resource Sharing 지원
 
-### 프론트엔드
-- **HTML5** - 구조
-- **CSS3** - 터미널 스타일링
-- **JavaScript ES6+** - 게임 로직
-- **JetBrains Mono** - 개발자 폰트
+### Frontend
+- **HTML5**: 마크업
+- **CSS3**: 스타일링 (JetBrains Mono 폰트 사용)
+- **Vanilla JavaScript**: 게임 로직 및 API 통신
+
+### 배포
+- **AWS Elastic Beanstalk**: 애플리케이션 배포 및 관리
+- **통합 서버**: 프론트엔드와 백엔드를 하나의 Flask 애플리케이션으로 통합
 
 ## 📁 프로젝트 구조
 
 ```
 cloud-hero-game/
-├── backend/
-│   ├── app.py              # Flask 메인 서버
-│   ├── game_data.json      # 게임 문제 데이터
-│   ├── ascii_art.json      # 아스키 아트 데이터
-│   ├── requirements.txt    # Python 의존성
-│   ├── run_server.py       # 서버 실행 스크립트
-│   └── test_api.py         # API 테스트 스크립트
-├── frontend/
-│   ├── index.html          # 메인 게임 페이지
-│   ├── test.html           # 개발/테스트 페이지
-│   ├── style.css           # 터미널 스타일
-│   └── script.js           # 게임 로직
-├── README.md               # 프로젝트 문서
-└── .gitignore             # Git 무시 파일
+├── application.py              # Elastic Beanstalk 메인 애플리케이션
+├── requirements.txt           # Python 의존성 패키지
+├── .gitignore                # Git 무시 파일 설정
+├── frontend/                 # 프론트엔드 파일들
+│   ├── index.html           # 메인 게임 페이지
+│   ├── script.js            # 게임 로직 JavaScript
+│   ├── style.css            # 게임 스타일시트
+│   ├── languages.js         # 다국어 지원 (개발 중)
+│   └── multilingual_final.html # 다국어 버전 (개발 중)
+└── backend/                 # 백엔드 데이터 파일들
+    ├── game_data.json       # 게임 문제 및 시나리오 데이터
+    ├── ascii_art.json       # ASCII 아트 데이터
+    ├── app.py              # 백엔드 서버 (개발용)
+    └── requirements.txt    # 백엔드 의존성
 ```
 
-## 🚀 설치 및 실행
+## 🚀 게임 링크
 
-### 1. 저장소 클론
-```bash
-git clone <your-repository-url>
-cd cloud-hero-game
-```
+**🎯 [지금 플레이하기!](https://cloud-hero.site/)**
 
-### 2. 백엔드 설정
-```bash
-cd backend
-
-# 가상환경 생성 (선택사항)
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 의존성 설치
-pip install -r requirements.txt
-
-# 서버 실행
-python app.py
-# 또는
-python run_server.py
-```
-
-### 3. 프론트엔드 실행
-```bash
-cd frontend
-
-# 브라우저에서 열기
-open index.html
-# 또는 개발/테스트용
-open test.html
-```
-
-### 4. 게임 접속
-- **메인 게임**: http://localhost:3000 (또는 파일 경로)
-- **백엔드 API**: http://localhost:5000
-
-## 🎮 게임 플레이 방법
-
-1. **이름 입력**: 용사의 이름을 입력하고 게임 시작
-2. **문제 해결**: AWS 서비스 관련 사지선다 문제 풀이
-3. **결과 확인**: 정답/오답과 상세 설명 확인
-4. **모험 완료**: 10개 문제를 모두 풀고 클라우드 마을 구하기
-5. **리더보드**: 다른 플레이어들과 점수 비교
+*게임은 AWS Elastic Beanstalk에 배포되어 언제든지 플레이할 수 있습니다.*
 
 ## 📚 문제 구성
 
-총 **10개 문제**로 구성되어 있으며, 모든 문제는 AWS 공식 문서를 기반으로 합니다:
+총 **10개의 스테이지**로 구성되어 있으며, 각 스테이지는 다음과 같은 AWS 서비스들을 다룹니다:
 
-1. **EC2** - 클라우드 컴퓨팅 기본 개념
-2. **EC2 트러블슈팅** - 메모리 부족 해결
-3. **S3 버전 관리** - 삭제된 데이터 복구
-4. **Lambda** - 함수 실행 시간 제한
-5. **RDS** - 다중 AZ 고가용성
-6. **CloudFront** - 캐시 무효화
-7. **IAM** - 최소 권한 원칙
-8. **Auto Scaling** - 스케일 아웃 개념
-9. **보안 그룹** - 포트 설정
-10. **Bedrock** - AI 서비스 트러블슈팅
+1. **AWS 기본 개념** - 클라우드 컴퓨팅 서비스 이해
+2. **EC2 (Elastic Compute Cloud)** - 인스턴스 메모리 관리 및 최적화
+3. **S3 (Simple Storage Service)** - 데이터 백업 및 복구 전략
+4. **Lambda** - 서버리스 함수 실행 시간 제한
+5. **RDS (Relational Database Service)** - 다중 AZ 배포와 고가용성
+6. **CloudFront** - CDN 캐시 무효화 및 콘텐츠 배포
+7. **IAM (Identity and Access Management)** - 최소 권한 원칙과 보안
+8. **Auto Scaling** - 자동 확장 및 스케일링 전략
+9. **Security Groups** - 네트워크 보안 및 포트 관리
+10. **Amazon Bedrock** - AI/ML 서비스 권한 및 접근 관리
 
-## 🔧 API 엔드포인트
-
-### 게임 플로우
-- `POST /api/game/start` - 게임 시작
-- `GET /api/game/question/<session_id>` - 문제 가져오기
-- `POST /api/game/answer` - 답안 제출
-- `GET /api/game/status/<session_id>` - 게임 상태 확인
-
-### 부가 기능
-- `GET /api/game/leaderboard` - 리더보드
-- `POST /api/game/reset/<session_id>` - 게임 재시작
-- `GET /api/debug/sessions` - 디버그 정보
-
-## 🧪 테스트
-
-### API 테스트
-```bash
-cd backend
-python test_api.py
-```
-
-### 프론트엔드 테스트
-- `test.html` 페이지에서 디버그 도구 사용
-- 서버 연결 상태 확인
-- 테스트 데이터 리셋 기능
-
-## 🌐 배포
-
-### AWS 배포 옵션
-1. **S3 + CloudFront** (정적 웹사이트)
-2. **Elastic Beanstalk** (Flask 앱)
-3. **EC2** (직접 서버 관리)
-
-자세한 배포 가이드는 추후 업데이트 예정입니다.
-
-## 🤝 기여하기
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
-
-## 📞 문의
-
-프로젝트에 대한 질문이나 제안사항이 있으시면 이슈를 생성해주세요.
+각 문제는 실제 업무 상황을 반영한 시나리오와 함께 제공되며, 정답 해설과 AWS 공식 문서 링크를 통해 심화 학습이 가능합니다.
 
 ---
 
-**🎮 클라우드 용사가 되어 AWS 마스터로 거듭나세요! 🚀**
+**🎯 목표**: AWS 클라우드 서비스에 대한 실무 지식을 게임을 통해 재미있게 학습하세요!

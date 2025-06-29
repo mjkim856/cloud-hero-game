@@ -128,7 +128,7 @@ function getText(path) {
         if (current && current[key]) {
             current = current[key];
         } else {
-            console.warn(`Translation not found for: ${path}`);
+            console.warn(`Translation not found for`);
             return path;
         }
     }

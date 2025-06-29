@@ -127,8 +127,9 @@ def get_question(session_id):
         session = game_sessions[session_id]
         current_q = session['current_question']
         
-        if current_q >= len(game_data['questions']):
-            return jsonify({'error': '모든 문제를 완료했습니다.'}), 400
+        # ❌ 이 부분 완전히 삭제
+        # if current_q >= len(game_data['questions']):
+        #     return jsonify({'error': '더 이상 문제가 없습니다.'}), 400
         
         question = game_data['questions'][current_q]
         
@@ -226,13 +227,18 @@ def submit_answer():
             player_name = session['player_name']
             accuracy = (session['correct_answers'] / session['total_questions']) * 100
             
+            # game_data에서 ending_message.success 가져와서 {player_name} 치환
+            ending_template = game_data.get('ending_message', {}).get('success', [])
+            ending_message = [line.replace('{player_name}', player_name) for line in ending_template]
+
+            
             result.update({
                 'final_score': session['score'],
                 'correct_answers': session['correct_answers'],
                 'total_questions': session['total_questions'],
                 'accuracy': accuracy,
                 'player_name': player_name,
-                'personalized_message': f"축하합니다, {player_name}님! 정답률 {accuracy:.0f}%로 게임을 완료했습니다!"
+                'ending_message': ending_message
             })
             
             print(f"🎉 게임 완료: {player_name} - 점수: {session['score']}, 정답률: {accuracy:.1f}%")
