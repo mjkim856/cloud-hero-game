@@ -1,0 +1,259 @@
+{
+  "game_info": {
+    "title": "Cloud Hero",
+    "description": "A crisis has struck the cloud world! The power of a hero is needed!",
+    "ascii_art": {
+      "hero": [
+        "    /\\   /\\",
+        "   (  . .)  ",
+        "    )   (   ",
+        "   (  v  )  ",
+        "  ^^  |  ^^ ",
+        "     /|\\    ",
+        "    / | \\   ",
+        "   /  |  \\  "
+      ],
+      "cloud": [
+        "     .-~~~-.",
+        "    /       \\",
+        "   |  AWS    |",
+        "    \\       /",
+        "     '~~~~~' "
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "scenario": "You have arrived at the village entrance! What is the name of the AWS service that runs servers on the cloud?",
+      "ascii_scene": [
+        "    .-~~~-.    ",
+        "   /       \\   ",
+        "  | SERVER  |  ",
+        "   \\       /   ",
+        "    '~~~~~'    ",
+        "       |       ",
+        "   [VILLAGE]   "
+      ],
+      "choices": [
+        "EC2",
+        "S3",
+        "Lambda",
+        "RDS"
+      ],
+      "correct_answer": 0,
+      "explanation": "Amazon EC2 (Elastic Compute Cloud) is a web service that provides scalable computing capacity in the cloud.",
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html"
+    },
+    {
+      "id": 2,
+      "scenario": "Deep within the EC2 mines, instances are running out of control. The instances are shouting 'Out of memory: kill process xxxxx!' and running around chaotically. What should you do?",
+      "ascii_scene": [
+        "   ⚠️  ERROR  ⚠️   ",
+        "  ┌─────────────┐  ",
+        "  │ OUT OF      │  ",
+        "  │ MEMORY!     │  ",
+        "  │ KILL PROC   │  ",
+        "  └─────────────┘  ",
+        "    💥 💥 💥     "
+      ],
+      "choices": [
+        "Keep rebooting",
+        "Stop the instance, select a larger instance type, and restart",
+        "Delete the instance",
+        "Do nothing"
+      ],
+      "correct_answer": 1,
+      "explanation": "When you encounter an out-of-memory error, you should stop the instance and change to a larger instance type to increase memory.",
+      "reference_url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-troubleshoot.html"
+    },
+    {
+      "id": 3,
+      "scenario": "In the S3 treasure vault, important data was accidentally deleted! The villagers are crying. How can you recover the data?",
+      "ascii_scene": [
+        "   📦 S3 VAULT   ",
+        "  ┌─────────────┐ ",
+        "  │    EMPTY    │ ",
+        "  │   😭😭😭    │ ",
+        "  │  DELETED!   │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Give up",
+        "If versioning is enabled, restore a previous version",
+        "Upload it again",
+        "Contact AWS support"
+      ],
+      "correct_answer": 1,
+      "explanation": "If S3 versioning is enabled, you can restore a deleted object's previous version. (If there is no versioning or backup, recovery is impossible 😭)",
+      "reference_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+    },
+    {
+      "id": 4,
+      "scenario": "In the Lambda Wizard's Tower, a function has been running for over xx minutes. The wizard shouts, 'Time's up!' What is the maximum execution time for Lambda?",
+      "ascii_scene": [
+        "    🏰 LAMBDA    ",
+        "   ┌─────────┐   ",
+        "   │ 💥 ⏰ 💥 │   ",
+        "   │ TIMEOUT! │   ",
+        "   │ 🧙‍♂️ MAGE  │   ",
+        "   └─────────┘   "
+      ],
+      "choices": [
+        "5 minutes",
+        "10 minutes",
+        "15 minutes",
+        "30 minutes"
+      ],
+      "correct_answer": 2,
+      "explanation": "The maximum execution timeout for an AWS Lambda function is 15 minutes.",
+      "reference_url": "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+    },
+    {
+      "id": 5,
+      "scenario": "Suddenly, the connection to the RDS database castle is lost! The lord laments, 'I should have done Multi-AZ deployment...' What is the main purpose of Multi-AZ deployment?",
+      "ascii_scene": [
+        "   🏰 RDS DB    ",
+        "  ┌───────────┐  ",
+        "  │ CONNECTION│  ",
+        "  │   LOST!   │  ",
+        "  │     💔    │  ",
+        "  └───────────┘  "
+      ],
+      "choices": [
+        "Improve performance",
+        "Reduce costs",
+        "High availability and automatic failover",
+        "Enhance security"
+      ],
+      "correct_answer": 2,
+      "explanation": "RDS Multi-AZ deployments provide high availability and automatically failover to a standby instance if the primary DB instance fails.",
+      "reference_url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+    },
+    {
+      "id": 6,
+      "scenario": "At the CloudFront Messenger's Post, the website has been updated, but users still see the previous version! The messenger shouts, 'It's the cache!' What is the most appropriate solution?",
+      "ascii_scene": [
+        "   🌐 CLOUDFRONT ",
+        "  ┌─────────────┐ ",
+        "  │ OLD CACHE   │ ",
+        "  │ 📄➡️📄 STUCK │ ",
+        "  │ INVALIDATE! │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Restart the server",
+        "Perform cache invalidation",
+        "Delete and recreate CloudFront",
+        "Wait 24 hours"
+      ],
+      "correct_answer": 1,
+      "explanation": "To update cached content immediately in CloudFront, use cache invalidation to force removal of specific files or paths.",
+      "reference_url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html"
+    },
+    {
+      "id": 7,
+      "scenario": "At the IAM Security Office, you need to grant permissions to a new resident. The sheriff emphasizes, 'Principle of least privilege!' What is the correct approach?",
+      "ascii_scene": [
+        "   🛡️ IAM OFFICE ",
+        "  ┌─────────────┐ ",
+        "  │ 👮‍♂️ SHERIFF │ ",
+        "  │ LEAST       │ ",
+        "  │ PRIVILEGE!  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Grant admin privileges",
+        "Grant only the minimum necessary permissions",
+        "Grant all permissions",
+        "Grant no permissions"
+      ],
+      "correct_answer": 1,
+      "explanation": "According to the IAM principle of least privilege, users should only have the minimum permissions required to perform their tasks.",
+      "reference_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    },
+    {
+      "id": 8,
+      "scenario": "At the Auto Scaling Training Ground, traffic has surged! The instructor shouts, 'Scaling out is needed!' What does scaling out mean?",
+      "ascii_scene": [
+        "  📈 AUTO SCALING ",
+        "  ┌─────────────┐ ",
+        "  │ TRAFFIC ⬆️  │ ",
+        "  │ 👨‍🏫 TRAINER │ ",
+        "  │ SCALE OUT!  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Increase the size of instances",
+        "Increase the number of instances",
+        "Delete instances",
+        "Restart instances"
+      ],
+      "correct_answer": 1,
+      "explanation": "Scaling out means horizontal scaling—adding more instances to distribute the load.",
+      "reference_url": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
+    },
+    {
+      "id": 9,
+      "scenario": "At the Security Group Fortress, you try to access the web server, but the connection fails! The commander shouts, 'Port 80 is blocked!' How can you allow HTTP traffic?",
+      "ascii_scene": [
+        "   🛡️ SECURITY    ",
+        "  ┌─────────────┐ ",
+        "  │ PORT 80 ❌  │ ",
+        "  │ 🚫 BLOCKED  │ ",
+        "  │ HTTP DENIED │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Allow inbound port 80 (HTTP) from 0.0.0.0/0",
+        "Modify only outbound rules",
+        "Delete the security group",
+        "Restart the instance"
+      ],
+      "correct_answer": 0,
+      "explanation": "To allow HTTP access to the web server, add port 80 to the inbound rules of the security group. 0.0.0.0/0 allows access from all IPs.",
+      "reference_url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
+    },
+    {
+      "id": 10,
+      "scenario": "After all adventures are over, the hero is about to cross to the next world! But the Bedrock AI portal creates an 'AccessDeniedException' error and won't work. The wizard says, 'You don't have model access!' How can you fix this?",
+      "ascii_scene": [
+        "   🌀 PORTAL GATE  ",
+        "  ┌─────────────┐ ",
+        "  │ ❌ ACCESS    │ ",
+        "  │ DENIED!     │ ",
+        "  │ 🧙‍♂️ HELP ME! │ ",
+        "  │ 🚪➡️🌍 NEXT  │ ",
+        "  └─────────────┘ "
+      ],
+      "choices": [
+        "Restart the server",
+        "Request access to the Foundation Model you want to use in the Bedrock console",
+        "Use another AI service",
+        "Ignore the permission and force execution"
+      ],
+      "correct_answer": 1,
+      "explanation": "If you get an AccessDeniedException error in Bedrock, you must first request access to the Foundation Model you want to use in the AWS Bedrock console.",
+      "reference_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html"
+    }
+  ],
+  "ending_message": {
+    "success": [
+      "🎉 Congratulations! 🎉",
+      "",
+      "🌈 The skies are clear!",
+      "{player_name} has saved the Cloud Village!",
+      "",
+      "   ⭐ CLOUD HERO ⭐",
+      "  ┌─────────────────┐",
+      "  │    🏆 WINNER    │",
+      "  │   AWS MASTER    │",
+      "  │  ☁️ ☁️ ☁️ ☁️   │",
+      "  │  🌀 PORTAL 🌀   │",
+      "  └─────────────────┘",
+      "",
+      "The villagers will remember {player_name}",
+      "as a true hero!"
+    ]
+  }
+}

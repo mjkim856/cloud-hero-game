@@ -677,3 +677,42 @@ body {
         font-size: 15px;
     }
 }
+
+/* 버튼 */
+.lang-switch-buttons {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    z-index: 1500;
+}
+
+.lang-switch-buttons button {
+    background: #0a0a0a; 
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    border: 2px solid #00ff41;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+    color: #00ff41;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.lang-switch-buttons button:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+    .lang-switch-buttons {
+        top: 90px;
+        right: 10px;
+        flex-direction: column;
+    }
+
+    .lang-switch-buttons button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
