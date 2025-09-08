@@ -248,8 +248,8 @@ def health_check():
     return jsonify({'status': 'healthy', 'service': 'cloud-hero-game'})
 
 if __name__ == '__main__':
-    # 프로덕션에서는 debug=False, host='127.0.0.1' 사용
+    # Railway 배포를 위한 설정
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
-    host = os.environ.get('FLASK_HOST', '127.0.0.1')
-    port = int(os.environ.get('FLASK_PORT', 5001))
+    host = os.environ.get('FLASK_HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', os.environ.get('FLASK_PORT', 5001)))
     application.run(debug=debug_mode, host=host, port=port)
