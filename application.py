@@ -2,32 +2,65 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
+import logging
+from werkzeug.utils import secure_filename
+from werkzeug.security import safe_join
 
 application = Flask(__name__)
-application.secret_key = 'cloud-hero-secret-key-2024'
+application.secret_key = os.environ.get('SECRET_KEY', os.urandom(32))
 CORS(application)
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(__file__)
 game_sessions = {}
 
 def load_game_data(lang='ko'):
-    path = os.path.join(BASE_DIR, 'backend', lang, 'game_data.json')
+    # Path Traversal 방지: 허용된 언어만 사용
+    if lang not in ['ko', 'en']:
+        logger.warning(f"Invalid language requested: {lang}")
+        lang = 'ko'
+    
+    # 안전한 경로 구성
+    safe_path = safe_join(BASE_DIR, 'backend', lang, 'game_data.json')
+    if not safe_path:
+        logger.error(f"Invalid path construction for language: {lang}")
+        return None
+        
     try:
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(safe_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"❌ {path} 파일을 찾을 수 없습니다!")
+        logger.error(f"Game data file not found: {safe_path}")
+        return None
+    except json.JSONDecodeError:
+        logger.error(f"Invalid JSON in game data file: {safe_path}")
         return None
 
 def load_ascii_art(lang='ko'):
-    path = os.path.join(BASE_DIR, 'backend', lang, 'ascii_art.json')
+    # Path Traversal 방지: 허용된 언어만 사용
+    if lang not in ['ko', 'en']:
+        logger.warning(f"Invalid language requested: {lang}")
+        lang = 'ko'
+    
+    # 안전한 경로 구성
+    safe_path = safe_join(BASE_DIR, 'backend', lang, 'ascii_art.json')
+    if not safe_path:
+        logger.error(f"Invalid path construction for language: {lang}")
+        return {}
+        
     try:
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(safe_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"❌ {path} 파일을 찾을 수 없습니다!")
+        logger.error(f"ASCII art file not found: {safe_path}")
+        return {}
+    except json.JSONDecodeError:
+        logger.error(f"Invalid JSON in ASCII art file: {safe_path}")
         return {}
 
 @application.route('/')
@@ -50,7 +83,12 @@ def style():
 
 @application.route('/<path:filename>')
 def static_files(filename):
-    return send_from_directory('frontend', filename)
+    # Path Traversal 방지
+    safe_filename = secure_filename(filename)
+    if not safe_filename or safe_filename != filename:
+        logger.warning(f"Potentially unsafe filename requested: {filename}")
+        return jsonify({'error': 'Invalid filename'}), 400
+    return send_from_directory('frontend', safe_filename)
 
 @application.route('/api/game/start', methods=['POST'])
 def start_game():
@@ -73,7 +111,7 @@ def start_game():
             'score': 0,
             'correct_answers': 0,
             'total_questions': len(game_data['questions']),
-            'start_time': datetime.now().isoformat(),
+            'start_time': datetime.now(timezone.utc).isoformat(),
             'answers': []
         }
 
@@ -98,6 +136,11 @@ def get_question(session_id):
         game_data = session['game_data']
         current_q = session['current_question']
 
+        # 배열 경계 검사
+        if current_q >= len(game_data['questions']):
+            logger.error(f"Question index out of bounds: {current_q}")
+            return jsonify({'error': 'Invalid question index'}), 400
+            
         question = game_data['questions'][current_q]
 
         return jsonify({
@@ -188,7 +231,15 @@ def get_game_status(session_id):
     try:
         if session_id not in game_sessions:
             return jsonify({'error': 'Invalid session'}), 400
-        return jsonify(game_sessions[session_id])
+        # 민감한 정보 제외하고 필요한 정보만 반환
+        session_data = game_sessions[session_id]
+        return jsonify({
+            'player_name': session_data['player_name'],
+            'current_question': session_data['current_question'],
+            'score': session_data['score'],
+            'correct_answers': session_data['correct_answers'],
+            'total_questions': session_data['total_questions']
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -197,4 +248,8 @@ def health_check():
     return jsonify({'status': 'healthy', 'service': 'cloud-hero-game'})
 
 if __name__ == '__main__':
-    application.run(debug=True, host='0.0.0.0', port=5001)
+    # 프로덕션에서는 debug=False, host='127.0.0.1' 사용
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    host = os.environ.get('FLASK_HOST', '127.0.0.1')
+    port = int(os.environ.get('FLASK_PORT', 5001))
+    application.run(debug=debug_mode, host=host, port=port)

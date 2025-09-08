@@ -54,8 +54,15 @@ class CloudHeroGame {
             errorMessage    : document.getElementById('error-message'),
             errorText       : document.getElementById('error-text'),
             errorCloseBtn   : document.getElementById('error-close'),
-            langSwitch      : document.getElementById('lang-switch') // added selector
+            langSwitch      : document.getElementById('lang-switch')
         };
+        
+        // DOM 요소 존재 확인
+        for (const [key, element] of Object.entries(this.elements)) {
+            if (!element) {
+                console.warn(`Missing DOM element: ${key}`);
+            }
+        }
     }
 
     /* ------------------------------------------------------------------ */
@@ -72,9 +79,10 @@ class CloudHeroGame {
         if (this.elements.langSwitch) {
             this.elements.langSwitch.value = this.lang;
             this.elements.langSwitch.addEventListener('change', e => {
-                const targetLang = e.target.value;
-                // simply reload root with ?lang=xx so server gives other html
-                location.href = '/?lang=' + targetLang;
+                const targetLang = this.sanitizeInput(e.target.value);
+                if (['ko', 'en'].includes(targetLang)) {
+                    location.href = '/?lang=' + encodeURIComponent(targetLang);
+                }
             });
         }
     }
@@ -89,7 +97,7 @@ class CloudHeroGame {
         this.elements.playerNameInput.focus();
     }
 
-    async displayWelcomeAscii() {
+    displayWelcomeAscii() {
         const welcomeAscii = [
             "╔════════════════════════════════════╗",
             "║              🗡️  🛡️  🗡️             ║",
@@ -137,7 +145,7 @@ class CloudHeroGame {
             });
 
             if (!response.ok) {
-                throw new Error('game start fail');
+                throw new Error(`Failed to start game: ${response.status}`);
             }
 
             const data = await response.json();
@@ -152,7 +160,8 @@ class CloudHeroGame {
             
         } catch (error) {
             this.hideLoading();
-            this.showError('game start error: ' + error.message);
+            console.error('Game start error:', error);
+            this.showError('Failed to start game. Please try again.');
         }
     }
 
@@ -186,7 +195,8 @@ class CloudHeroGame {
             this.hideLoading(); 
         } catch (error) {
             this.hideLoading();
-            this.showError('Load question error: ' + error.message);
+            console.error('Load question error:', error);
+            this.showError('Failed to load question. Please try again.');
         }
     }
 
@@ -227,7 +237,7 @@ class CloudHeroGame {
         choices.forEach((choice, index) => {
             const button = document.createElement('button');
             button.className = 'choice-button';
-            button.textContent = choice;
+            button.textContent = this.sanitizeInput(choice);
             button.setAttribute('data-index', index + 1);
             
             button.addEventListener('click', () => {
@@ -240,7 +250,7 @@ class CloudHeroGame {
 
     selectChoice(answerIndex, buttonElement) {
 
-        document.querySelectorAll('.choice-button').forEach(btn => {
+        this.elements.choicesContainer.querySelectorAll('.choice-button').forEach(btn => {
             btn.classList.remove('selected');
         });
         
@@ -302,13 +312,17 @@ class CloudHeroGame {
         this.elements.resultHeader.textContent = isCorrect ? '🎉 Correct!' : '❌ Wrong!';
         this.elements.resultHeader.className = `result-header ${isCorrect ? 'correct' : 'incorrect'}`;
 
-        // 답안 정보
-        this.elements.selectedAnswer.textContent = result.selected_choice;
-        this.elements.correctAnswer.textContent = this.currentQuestion.choices[result.correct_answer];
+        // 답안 정보 (XSS 방지)
+        this.elements.selectedAnswer.textContent = this.sanitizeInput(result.selected_choice);
+        if (this.currentQuestion?.choices && result.correct_answer < this.currentQuestion.choices.length) {
+            this.elements.correctAnswer.textContent = this.sanitizeInput(this.currentQuestion.choices[result.correct_answer]);
+        }
 
-        // 설명
-        this.elements.explanationText.textContent = result.explanation;
-        this.elements.referenceUrl.href = result.reference_url;
+        // 설명 (XSS 방지)
+        this.elements.explanationText.textContent = this.sanitizeInput(result.explanation);
+        if (result.reference_url && this.isValidUrl(result.reference_url)) {
+            this.elements.referenceUrl.href = result.reference_url;
+        }
 
         // 점수 업데이트
         this.elements.currentScore.textContent = result.current_score;
@@ -337,15 +351,17 @@ class CloudHeroGame {
         this.hideAllScreens();
         this.screens.ending.classList.add('active');
 
-        if (gameData && gameData.ending_message) {
-            this.elements.endingAscii.textContent = gameData.ending_message.join('\n');
+        if (gameData && Array.isArray(gameData.ending_message)) {
+            const sanitizedMessage = gameData.ending_message.map(line => this.sanitizeInput(line)).join('\n');
+            this.elements.endingAscii.textContent = sanitizedMessage;
         } 
 
         if (gameData) {
             this.elements.finalScore.textContent = gameData.final_score;
             this.elements.correctCount.textContent = `${gameData.correct_answers}/${gameData.total_questions}`;
             
-            const accuracy = Math.round((gameData.correct_answers / gameData.total_questions) * 100);
+            const accuracy = gameData.total_questions > 0 ? 
+                Math.round((gameData.correct_answers / gameData.total_questions) * 100) : 0;
             this.elements.accuracyRate.textContent = `${accuracy}%`;
         }
     }
@@ -369,18 +385,46 @@ class CloudHeroGame {
 
     showError(message) {
         console.error('🚨 Error:', message);
-        this.elements.errorText.textContent = message;
-        this.elements.errorMessage.classList.remove('hidden');
+        if (this.elements.errorText && this.elements.errorMessage) {
+            this.elements.errorText.textContent = this.sanitizeInput(message);
+            this.elements.errorMessage.classList.remove('hidden');
+        }
     }
 
     hideError() {
-        this.elements.errorMessage.classList.add('hidden');
+        if (this.elements.errorMessage) {
+            this.elements.errorMessage.classList.add('hidden');
+        }
     }
 
     hideAllScreens() {
         Object.values(this.screens).forEach(screen => {
             screen.classList.remove('active');
         });
+    }
+    
+    // 보안 헬퍼 메서드들
+    sanitizeInput(input) {
+        if (typeof input !== 'string') return String(input || '');
+        return input.replace(/[<>"'&]/g, (match) => {
+            const map = {
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#x27;',
+                '&': '&amp;'
+            };
+            return map[match];
+        });
+    }
+    
+    isValidUrl(string) {
+        try {
+            const url = new URL(string);
+            return ['http:', 'https:'].includes(url.protocol);
+        } catch {
+            return false;
+        }
     }
 }
 
@@ -393,8 +437,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         const errorMessage = document.getElementById('error-message');
-        if (!errorMessage.classList.contains('hidden')) {
-            errorMessage.classList.add('hidden');
+        if (errorMessage && !errorMessage.classList.contains('hidden')) {
+            window.game?.hideError();
         }
     }
 });

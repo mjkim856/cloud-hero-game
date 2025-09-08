@@ -85,7 +85,7 @@ class CloudHeroGame {
         this.elements.playerNameInput.focus();
     }
 
-    async displayWelcomeAscii() {
+    displayWelcomeAscii() {
         const welcomeAscii = [
             "╔═══════════════════════════════════╗",
             "║            클라우드 용사             ║",
@@ -148,7 +148,7 @@ class CloudHeroGame {
         } catch (error) {
             console.error('❌ 게임 시작 오류:', error);
             this.hideLoading();
-            this.showError('게임 시작 중 오류가 발생했습니다: ' + error.message);
+            this.showError('게임 시작 중 오류가 발생했습니다.');
         }
     }
 
@@ -191,7 +191,7 @@ class CloudHeroGame {
         } catch (error) {
             console.error('❌ 문제 로딩 오류:', error);
             this.hideLoading();
-            this.showError('문제 로딩 중 오류가 발생했습니다: ' + error.message);
+            this.showError('문제 로딩 중 오류가 발생했습니다.');
         }
     }
 
@@ -245,11 +245,10 @@ class CloudHeroGame {
         choices.forEach((choice, index) => {
             const button = document.createElement('button');
             button.className = 'choice-button';
-            button.textContent = choice;
+            button.textContent = this.sanitizeInput(choice);
             button.setAttribute('data-index', index + 1);
             
             button.addEventListener('click', () => {
-                // console.log('🎯 선택지 클릭:', index, choice);
                 this.selectChoice(index, button);
             });
             
@@ -260,8 +259,8 @@ class CloudHeroGame {
     selectChoice(answerIndex, buttonElement) {
         // console.log('✅ 답안 선택:', answerIndex);
         
-        // 모든 선택지에서 selected 클래스 제거
-        document.querySelectorAll('.choice-button').forEach(btn => {
+        // 모든 선택지에서 selected 클래스 제거 (스코프 제한)
+        this.elements.choicesContainer.querySelectorAll('.choice-button').forEach(btn => {
             btn.classList.remove('selected');
         });
         
@@ -319,7 +318,7 @@ class CloudHeroGame {
         } catch (error) {
             console.error('❌ 답안 제출 오류:', error);
             this.hideLoading();
-            this.showError('답안 제출 중 오류가 발생했습니다: ' + error.message);
+            this.showError('답안 제출 중 오류가 발생했습니다.');
         }
     }
 
@@ -334,13 +333,17 @@ class CloudHeroGame {
         this.elements.resultHeader.textContent = isCorrect ? '🎉 정답입니다!' : '❌ 틀렸습니다!';
         this.elements.resultHeader.className = `result-header ${isCorrect ? 'correct' : 'incorrect'}`;
 
-        // 답안 정보
-        this.elements.selectedAnswer.textContent = result.selected_choice;
-        this.elements.correctAnswer.textContent = this.currentQuestion.choices[result.correct_answer];
+        // 답안 정보 (XSS 방지)
+        this.elements.selectedAnswer.textContent = this.sanitizeInput(result.selected_choice);
+        if (this.currentQuestion?.choices && result.correct_answer < this.currentQuestion.choices.length) {
+            this.elements.correctAnswer.textContent = this.sanitizeInput(this.currentQuestion.choices[result.correct_answer]);
+        }
 
-        // 설명
-        this.elements.explanationText.textContent = result.explanation;
-        this.elements.referenceUrl.href = result.reference_url;
+        // 설명 (XSS 방지)
+        this.elements.explanationText.textContent = this.sanitizeInput(result.explanation);
+        if (result.reference_url && this.isValidUrl(result.reference_url)) {
+            this.elements.referenceUrl.href = result.reference_url;
+        }
 
         // 점수 업데이트
         this.elements.currentScore.textContent = result.current_score;
@@ -375,10 +378,10 @@ class CloudHeroGame {
         this.hideAllScreens();
         this.screens.ending.classList.add('active');
 
-        if (gameData && gameData.ending_message) {
-            // 개인화된 엔딩 메시지 표시
-            this.elements.endingAscii.textContent = gameData.ending_message.join('\n');
-            // console.log('✨ 개인화된 엔딩 메시지 표시 완료:', gameData.player_name);
+        if (gameData && Array.isArray(gameData.ending_message)) {
+            // 개인화된 엔딩 메시지 표시 (XSS 방지)
+            const sanitizedMessage = gameData.ending_message.map(line => this.sanitizeInput(line)).join('\n');
+            this.elements.endingAscii.textContent = sanitizedMessage;
         } 
 
         // 최종 점수 표시
@@ -386,7 +389,8 @@ class CloudHeroGame {
             this.elements.finalScore.textContent = gameData.final_score;
             this.elements.correctCount.textContent = `${gameData.correct_answers}/${gameData.total_questions}`;
             
-            const accuracy = Math.round((gameData.correct_answers / gameData.total_questions) * 100);
+            const accuracy = gameData.total_questions > 0 ? 
+                Math.round((gameData.correct_answers / gameData.total_questions) * 100) : 0;
             this.elements.accuracyRate.textContent = `${accuracy}%`;
         }
     }
@@ -412,7 +416,7 @@ class CloudHeroGame {
 
     showError(message) {
         console.error('🚨 에러 표시:', message);
-        this.elements.errorText.textContent = message;
+        this.elements.errorText.textContent = this.sanitizeInput(message);
         this.elements.errorMessage.classList.remove('hidden');
     }
 
@@ -424,6 +428,30 @@ class CloudHeroGame {
         Object.values(this.screens).forEach(screen => {
             screen.classList.remove('active');
         });
+    }
+    
+    // 보안 헬퍼 메서드들
+    sanitizeInput(input) {
+        if (typeof input !== 'string') return String(input || '');
+        return input.replace(/[<>"'&]/g, (match) => {
+            const map = {
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#x27;',
+                '&': '&amp;'
+            };
+            return map[match];
+        });
+    }
+    
+    isValidUrl(string) {
+        try {
+            const url = new URL(string);
+            return ['http:', 'https:'].includes(url.protocol);
+        } catch {
+            return false;
+        }
     }
 }
 

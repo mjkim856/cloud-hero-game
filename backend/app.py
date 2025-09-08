@@ -6,12 +6,17 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
+import logging
 
 app = Flask(__name__)
-app.secret_key = 'cloud-hero-secret-key-2024'
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(32))
 CORS(app)
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # 게임 데이터 로드
 def load_game_data():
@@ -40,7 +45,7 @@ def home():
         "message": "🎮 클라우드 용사 게임 서버가 실행 중입니다!",
         "status": "running",
         "port": 5001,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat()
     })
 
 @app.route('/api/game/start', methods=['POST'])
@@ -59,7 +64,7 @@ def start_game():
         'current_question': 0,
         'score': 0,
         'correct_answers': 0,
-        'start_time': datetime.now().isoformat(),
+        'start_time': datetime.now(timezone.utc).isoformat(),
         'answers': []
     }
     
@@ -97,13 +102,9 @@ def get_question(session_id):
         
         ending_message_template = game_data.get('ending_message', {}).get('success', [])
         
-        # 플레이어 이름을 메시지에 삽입
-        personalized_ending = []
-        for line in ending_message_template:
-            # {player_name}을 실제 플레이어 이름으로 교체
-            personalized_line = line.replace('{player_name}', player_name)
-            personalized_ending.append(personalized_line)
-            print(f"엔딩 라인: {personalized_line}")
+        # 플레이어 이름을 메시지에 삽입 (리스트 컴프리헨션 사용)
+        personalized_ending = [line.replace('{player_name}', player_name) for line in ending_message_template]
+        logger.info(f"Game completed for player: {player_name}")
         
         return jsonify({
             "game_completed": True,
@@ -195,7 +196,7 @@ def get_game_status(session_id):
         "total_questions": total_questions,
         "score": session_data['score'],
         "correct_answers": session_data['correct_answers'],
-        "progress_percentage": round((session_data['current_question'] / total_questions) * 100, 1)
+        "progress_percentage": round((session_data['current_question'] / total_questions) * 100, 1) if total_questions > 0 else 0
     })
 
 @app.route('/api/game/reset/<session_id>', methods=['POST'])
@@ -208,7 +209,7 @@ def reset_game(session_id):
             'current_question': 0,
             'score': 0,
             'correct_answers': 0,
-            'start_time': datetime.now().isoformat(),
+            'start_time': datetime.now(timezone.utc).isoformat(),
             'answers': []
         }
         print(f"🔄 게임 재시작: {player_name}")
@@ -231,9 +232,12 @@ def debug_sessions():
     })
 
 if __name__ == '__main__':
-    print("🎮 클라우드 용사 게임 서버 시작! (개인화 엔딩 수정 버전)")
-    print("📡 테스트 URL: http://localhost:5001")
-    print("✨ 수정 사항:")
-    print("   - 개인화된 엔딩 메시지 로그 추가")
-    print("   - 플레이어 이름 교체 로직 강화")
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    logger.info("🎮 클라우드 용사 게임 서버 시작! (보안 강화 버전)")
+    logger.info("📡 테스트 URL: http://localhost:5001")
+    logger.info("✨ 수정 사항: 보안 취약점 수정 및 성능 개선")
+    
+    # 프로덕션에서는 debug=False, host='127.0.0.1' 사용
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    host = os.environ.get('FLASK_HOST', '127.0.0.1')
+    port = int(os.environ.get('FLASK_PORT', 5001))
+    app.run(debug=debug_mode, host=host, port=port)
